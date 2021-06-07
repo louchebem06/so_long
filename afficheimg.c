@@ -6,13 +6,16 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/06 06:14:44 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/06 07:05:27 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/07 13:39:41 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //gcc test.c -L ./minilibx -lmlx
+//gcc test.c -L ./minilibx_linux/ -lmlx -lm -lbsd -lX11 -lXext
+//https://harm-smits.github.io/42docs/libs/minilibx/getting_started.html
 
 #include "minilibx/mlx.h"
+//#include "minilibx_linux/mlx.h"
 #include <stdio.h>
 #include <unistd.h>
 
@@ -33,8 +36,8 @@ int	main(void)
 	mlx_win = mlx_new_window(mlx, 500, 500, "Hello world!");
 	img = mlx_xpm_file_to_image(mlx, "./pika.xpm", &coucou1, &coucou2);
 	img_pixel = mlx_get_data_addr (img, &ppp, &heigh_img, &order);
-	//mlx_put_image_to_window(mlx, mlx_win, img, 5, 5);
-	//mlx_loop(mlx);
+	mlx_put_image_to_window(mlx, mlx_win, img, 5, 5);
+	mlx_loop(mlx);
 	for (int i = 0; img_pixel[i]; i++)
 		write(1, &img_pixel[i], 1);
 }
