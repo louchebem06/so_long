@@ -111,23 +111,6 @@ void ft_define_player(t_windows *windows)
 	windows->player.right_r.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/right_r.xpm", &windows->player.right_r.height, &windows->player.right_r.width);
 }
 
-int key_release(int keycode, t_windows *windows)
-{
-	if (keycode == 119 || keycode == 115 || keycode == 97 || keycode == 100)
-	{
-		maps(windows);
-		if (keycode == 119)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.up_s.state, windows->player.position.x, windows->player.position.y);
-		if (keycode == 115)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.down_s.state, windows->player.position.x, windows->player.position.y);
-		if (keycode == 97)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.left_s.state, windows->player.position.x, windows->player.position.y);
-		if (keycode == 100)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.right_s.state, windows->player.position.x, windows->player.position.y);
-	}
-	return (0);
-}
-
 void up_animation(t_windows *windows, int vitesse)
 {
 	static int up = 0;
@@ -192,18 +175,35 @@ void right_animation(t_windows *windows, int vitesse)
 	windows->player.position.x += vitesse;
 }
 
+int key_release(int keycode, t_windows *windows)
+{
+	if (keycode == 119 || keycode == 115 || keycode == 97 || keycode == 100 || keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)
+	{
+		//maps(windows);
+		if (keycode == 119 || keycode == 13)
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.up_s.state, windows->player.position.x, windows->player.position.y);
+		if (keycode == 115  || keycode == 1)
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.down_s.state, windows->player.position.x, windows->player.position.y);
+		if (keycode == 97 || keycode == 0)
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.left_s.state, windows->player.position.x, windows->player.position.y);
+		if (keycode == 100 || keycode == 2)
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.right_s.state, windows->player.position.x, windows->player.position.y);
+	}
+	return (0);
+}
+
 int key_press(int keycode, t_windows *windows)
 {
-	if (keycode == 119 || keycode == 115 || keycode == 97 || keycode == 100)
+	if (keycode == 119 || keycode == 115 || keycode == 97 || keycode == 100 || keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)
 	{
-		maps(windows);
-		if (keycode == 119)
+		//maps(windows);
+		if (keycode == 119 || keycode == 13)
 			up_animation(windows, 7);
-		if (keycode == 115)
+		if (keycode == 115 || keycode == 1)
 			down_animation(windows, 7);
-		if (keycode == 97)
+		if (keycode == 97 || keycode == 0)
 			left_animation(windows, 7);
-		if (keycode == 100)
+		if (keycode == 100 || keycode == 2)
 			right_animation(windows, 7);
 		if (windows->player.position.x <= 0)
 			windows->player.position.x = 0;
@@ -217,6 +217,19 @@ int key_press(int keycode, t_windows *windows)
 	}
 	return (0);
 }
+
+int	key_hook(int keycode, t_windows *windows)
+{
+	(void) windows;
+	printf("key : %d\n", keycode);
+	return (0);
+}
+
+/*
+	Function maps fait crash sur macOS mais pas sur linux
+	Les touch son differant sur wsl et macOS
+	Valgrind segfault sous macOS
+*/
 
 int	main(void)
 {
@@ -232,11 +245,13 @@ int	main(void)
 	windows.mlx_win = mlx_new_window(windows.mlx, windows.size.x, windows.size.y, "Ronflex adventure!");
 	ft_define_player(&windows);
 	
-	maps(&windows);
+	//maps(&windows);
 
 	mlx_put_image_to_window(windows.mlx, windows.mlx_win, windows.player.right_s.state, windows.player.position.x, windows.player.position.y);
 	mlx_hook(windows.mlx_win, 2, 1L<<0, key_press, &windows);
 	mlx_hook(windows.mlx_win, 3, 1L<<1, key_release, &windows);
+
+	mlx_key_hook(windows.mlx_win, key_hook, &windows);
 
 	mlx_loop(windows.mlx);
 	return (0);
