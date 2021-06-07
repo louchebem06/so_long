@@ -2,7 +2,9 @@
 //gcc test.c -L ./minilibx_linux/ -lmlx -lm -lbsd -lX11 -lXext
 //https://harm-smits.github.io/42docs/libs/minilibx/getting_started.html
 
-#include <mlx.h>
+#include "minilibx/mlx.h"
+//#include "minilibx_linux/mlx.h"
+#include <stdio.h>
 #include <unistd.h>
 
 typedef struct	s_pixel
