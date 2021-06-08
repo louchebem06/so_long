@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/08 03:24:28 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/08 15:25:24 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-typedef struct	s_pixel
-{
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}				t_pixel;
-
 typedef struct s_player
 {
 	void *state;
@@ -38,15 +29,15 @@ typedef struct s_player
 
 typedef struct s_position
 {
-	int x;
-	int y;
+	float x;
+	float y;
 }			t_position;
 
 typedef struct s_item
 {
 	t_player superball;
 	t_player wall;
-	t_player enemy;
+	t_player ground;
 }			t_item;
 
 typedef struct s_state
@@ -64,6 +55,7 @@ typedef struct s_state
 	t_player	right_l;
 	t_player	right_r;
 	t_position position;
+	int direction;
 }			t_state;
 
 typedef struct s_windows
@@ -73,16 +65,7 @@ typedef struct s_windows
 	t_state player;
 	t_item item;
 	t_position size;
-	t_pixel pixel;
 }			t_windows;
-
-void	ft_mlx_pixel_put(t_windows *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->pixel.addr + (y * data->pixel.line_length + x * (data->pixel.bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
-}
 
 void maps(t_windows *windows)
 {
@@ -90,20 +73,41 @@ void maps(t_windows *windows)
 
 	position.x = 0;
 	position.y = 0;
-	windows->pixel.img = mlx_new_image(windows->mlx, windows->size.x, windows->size.y);
-	windows->pixel.addr = mlx_get_data_addr(windows->pixel.img, &windows->pixel.bits_per_pixel, &windows->pixel.line_length, &windows->pixel.endian);
 	while (position.x < windows->size.x)
 	{
 		position.y = 0;
 		while (position.y < windows->size.y)
 		{
-			ft_mlx_pixel_put(windows, position.x, position.y, 0x00FF0000);
-			position.y++;
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
+			position.y += 30;
 		}
-		position.x++;
+		position.x += 30;
 	}
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->pixel.img, 0, 0);
 	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.superball.state, 30, 30);
+	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.wall.state, 60, 60);
+}
+
+void refresh_maps(t_windows *windows)
+{
+	t_position position;
+
+	position.x = 0;
+	position.y = 0;
+	while (position.x < windows->player.position.x)
+		position.x += 30;
+	while (position.y < windows->player.position.y)
+		position.y += 30;
+	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
+	if (windows->player.direction < 4)
+	{
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y - 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - 30, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - 30, position.y - 30);
+	}
 }
 
 void ft_define_player(t_windows *windows)
@@ -125,12 +129,15 @@ void ft_define_player(t_windows *windows)
 void ft_define_item(t_windows *windows)
 {
 	windows->item.superball.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/superball.xpm", &windows->item.superball.height, &windows->item.superball.width);
+	windows->item.wall.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/wall.xpm", &windows->item.wall.height, &windows->item.wall.width);
+	windows->item.ground.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/ground.xpm", &windows->item.ground.height, &windows->item.ground.width);
 }
 
-void up_animation(t_windows *windows, int vitesse)
+void up_animation(t_windows *windows, float vitesse)
 {
 	static int up = 2;
 
+	windows->player.direction = 0;
 	if (up > 4)
 		up = 2;
 	up++;
@@ -143,10 +150,11 @@ void up_animation(t_windows *windows, int vitesse)
 	windows->player.position.y -= vitesse;
 }
 
-void down_animation(t_windows *windows, int vitesse)
+void down_animation(t_windows *windows, float vitesse)
 {
 	static int down = 2;
 
+	windows->player.direction = 1;
 	if (down > 4)
 		down = 2;
 	down++;
@@ -159,10 +167,11 @@ void down_animation(t_windows *windows, int vitesse)
 	windows->player.position.y += vitesse;
 }
 
-void left_animation(t_windows *windows, int vitesse)
+void left_animation(t_windows *windows, float vitesse)
 {
 	static int left = 2;
 
+	windows->player.direction = 2;
 	if (left > 4)
 		left = 2;
 	left++;
@@ -175,10 +184,11 @@ void left_animation(t_windows *windows, int vitesse)
 	windows->player.position.x -= vitesse;
 }
 
-void right_animation(t_windows *windows, int vitesse)
+void right_animation(t_windows *windows, float vitesse)
 {
 	static int right = 2;
 
+	windows->player.direction = 3;
 	if (right > 4)
 		right = 2;
 	right++;
@@ -195,15 +205,15 @@ int key_press(int keycode, t_windows *windows)
 {
 	if (keycode == 119 || keycode == 115 || keycode == 97 || keycode == 100 || keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)
 	{
-		maps(windows);
+		refresh_maps(windows);
 		if (keycode == 119 || keycode == 13)
-			up_animation(windows, 7);
+			up_animation(windows, 7.5);
 		if (keycode == 115 || keycode == 1)
-			down_animation(windows, 7);
+			down_animation(windows, 7.5);
 		if (keycode == 97 || keycode == 0)
-			left_animation(windows, 7);
+			left_animation(windows, 7.5);
 		if (keycode == 100 || keycode == 2)
-			right_animation(windows, 7);
+			right_animation(windows, 7.5);
 		if (windows->player.position.x <= 0)
 			windows->player.position.x = 0;
 		if (windows->player.position.y <= 0)
@@ -212,7 +222,7 @@ int key_press(int keycode, t_windows *windows)
 			windows->player.position.x = windows->size.x - 30;
 		if (windows->player.position.y >= windows->size.y - 30)
 			windows->player.position.y = windows->size.y - 30;
-		printf("X : %d\nY : %d\n", windows->player.position.x, windows->player.position.y);
+		printf("X : %f\nY : %f\n", windows->player.position.x, windows->player.position.y);
 	}
 	else if (keycode == 53)
 	{
@@ -222,13 +232,13 @@ int key_press(int keycode, t_windows *windows)
 	return (0);
 }
 
-int close_click(int keycode, t_windows *windows)
+/*int close_click(int keycode, t_windows *windows)
 {
 	(void) windows;
 	(void) keycode;
 	printf("des famille");
 	return (0);
-}
+}*/
 
 
 int	key_hook(int keycode, t_windows *windows)
@@ -242,25 +252,26 @@ int	main(void)
 {
 	t_windows windows;
 
-	windows.size.x = 500;
-	windows.size.y = 500;
+	windows.size.x = 30*20;
+	windows.size.y = 30*20;
 
 	windows.player.position.x = windows.size.x/2-15;
 	windows.player.position.y = windows.size.y/2-15;
 
 	windows.mlx = mlx_init();
-	windows.mlx_win = mlx_new_window(windows.mlx, windows.size.x, windows.size.y, "Ronflex adventure!");
+	windows.mlx_win = mlx_new_window(windows.mlx, windows.size.x, windows.size.y, "so_long!");
 	ft_define_player(&windows);
 	ft_define_item(&windows);
 
 	maps(&windows);
 
 	mlx_put_image_to_window(windows.mlx, windows.mlx_win, windows.player.right_s.state, windows.player.position.x, windows.player.position.y);
+	windows.player.direction = 3;
 	mlx_hook(windows.mlx_win, 2, 1L<<0, key_press, &windows);
 
 	mlx_key_hook(windows.mlx_win, key_hook, &windows);
-	//Visiblement ne lance pas ma commande pour kill le programme voir unction close_click
-	mlx_hook(windows.mlx_win, 17, 1L<<6, close_click, &windows);
+	//Visiblement ne lance pas ma commande pour kill le programme voir fonction close_click
+	//mlx_hook(windows.mlx_win, 17, 1L<<6, close_click, &windows);
 
 	mlx_loop(windows.mlx);
 	return (0);
