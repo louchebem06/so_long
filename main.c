@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
+/*   Updated: 2021/06/08 03:24:28 by bledda           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 //gcc test.c -L ./minilibx -lmlx
 //gcc test.c -L ./minilibx_linux/ -lmlx -lm -lbsd -lX11 -lXext
 //https://harm-smits.github.io/42docs/libs/minilibx/getting_started.html
@@ -6,6 +18,7 @@
 //#include "minilibx_linux/mlx.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 typedef struct	s_pixel
 {
@@ -29,6 +42,13 @@ typedef struct s_position
 	int y;
 }			t_position;
 
+typedef struct s_item
+{
+	t_player superball;
+	t_player wall;
+	t_player enemy;
+}			t_item;
+
 typedef struct s_state
 {
 	t_player	up_s;
@@ -51,6 +71,7 @@ typedef struct s_windows
 	void	*mlx;
 	void	*mlx_win;
 	t_state player;
+	t_item item;
 	t_position size;
 	t_pixel pixel;
 }			t_windows;
@@ -71,52 +92,47 @@ void maps(t_windows *windows)
 	position.y = 0;
 	windows->pixel.img = mlx_new_image(windows->mlx, windows->size.x, windows->size.y);
 	windows->pixel.addr = mlx_get_data_addr(windows->pixel.img, &windows->pixel.bits_per_pixel, &windows->pixel.line_length, &windows->pixel.endian);
-	while (position.x <= windows->size.x)
+	while (position.x < windows->size.x)
 	{
 		position.y = 0;
-		while (position.y <= windows->size.y)
+		while (position.y < windows->size.y)
 		{
 			ft_mlx_pixel_put(windows, position.x, position.y, 0x00FF0000);
 			position.y++;
 		}
 		position.x++;
 	}
-	position.x = windows->size.x/2;
-	while (position.x <= windows->size.x)
-	{
-		position.y = 0;
-		while (position.y <= windows->size.y)
-		{
-			ft_mlx_pixel_put(windows, position.x, position.y, 0xFFFFFFFF);
-			position.y++;
-		}
-		position.x++;
-	}
 	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->pixel.img, 0, 0);
+	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.superball.state, 30, 30);
 }
 
 void ft_define_player(t_windows *windows)
 {
-	windows->player.up_s.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/up_s.xpm", &windows->player.up_s.height, &windows->player.up_s.width);
-	windows->player.up_l.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/up_l.xpm", &windows->player.up_l.height, &windows->player.up_l.width);
-	windows->player.up_r.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/up_r.xpm", &windows->player.up_r.height, &windows->player.up_r.width);
-	windows->player.down_s.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/down_s.xpm", &windows->player.down_s.height, &windows->player.down_s.width);
-	windows->player.down_l.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/down_l.xpm", &windows->player.down_l.height, &windows->player.down_l.width);
-	windows->player.down_r.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/down_r.xpm", &windows->player.down_r.height, &windows->player.down_r.width);
-	windows->player.left_s.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/left_s.xpm", &windows->player.left_s.height, &windows->player.left_s.width);
-	windows->player.left_l.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/left_l.xpm", &windows->player.left_l.height, &windows->player.left_l.width);
-	windows->player.left_r.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/left_r.xpm", &windows->player.left_r.height, &windows->player.left_r.width);
-	windows->player.right_s.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/right_s.xpm", &windows->player.right_s.height, &windows->player.right_s.width);
-	windows->player.right_l.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/right_l.xpm", &windows->player.right_l.height, &windows->player.right_l.width);
-	windows->player.right_r.state = mlx_xpm_file_to_image(windows->mlx, "./ronflex/right_r.xpm", &windows->player.right_r.height, &windows->player.right_r.width);
+	windows->player.up_s.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/up_s.xpm", &windows->player.up_s.height, &windows->player.up_s.width);
+	windows->player.up_l.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/up_l.xpm", &windows->player.up_l.height, &windows->player.up_l.width);
+	windows->player.up_r.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/up_r.xpm", &windows->player.up_r.height, &windows->player.up_r.width);
+	windows->player.down_s.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/down_s.xpm", &windows->player.down_s.height, &windows->player.down_s.width);
+	windows->player.down_l.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/down_l.xpm", &windows->player.down_l.height, &windows->player.down_l.width);
+	windows->player.down_r.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/down_r.xpm", &windows->player.down_r.height, &windows->player.down_r.width);
+	windows->player.left_s.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/left_s.xpm", &windows->player.left_s.height, &windows->player.left_s.width);
+	windows->player.left_l.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/left_l.xpm", &windows->player.left_l.height, &windows->player.left_l.width);
+	windows->player.left_r.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/left_r.xpm", &windows->player.left_r.height, &windows->player.left_r.width);
+	windows->player.right_s.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/right_s.xpm", &windows->player.right_s.height, &windows->player.right_s.width);
+	windows->player.right_l.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/right_l.xpm", &windows->player.right_l.height, &windows->player.right_l.width);
+	windows->player.right_r.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/right_r.xpm", &windows->player.right_r.height, &windows->player.right_r.width);
+}
+
+void ft_define_item(t_windows *windows)
+{
+	windows->item.superball.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/superball.xpm", &windows->item.superball.height, &windows->item.superball.width);
 }
 
 void up_animation(t_windows *windows, int vitesse)
 {
-	static int up = 0;
+	static int up = 2;
 
-	if (up >= 1000)
-		up = 0;
+	if (up > 4)
+		up = 2;
 	up++;
 	if (up % 3 == 0)
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.up_r.state, windows->player.position.x, windows->player.position.y);
@@ -129,10 +145,10 @@ void up_animation(t_windows *windows, int vitesse)
 
 void down_animation(t_windows *windows, int vitesse)
 {
-	static int down = 0;
+	static int down = 2;
 
-	if (down >= 1000)
-		down = 0;
+	if (down > 4)
+		down = 2;
 	down++;
 	if (down % 3 == 0)
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.down_r.state, windows->player.position.x, windows->player.position.y);
@@ -145,10 +161,10 @@ void down_animation(t_windows *windows, int vitesse)
 
 void left_animation(t_windows *windows, int vitesse)
 {
-	static int left = 0;
+	static int left = 2;
 
-	if (left >= 1000)
-		left = 0;
+	if (left > 4)
+		left = 2;
 	left++;
 	if (left % 3 == 0)
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.left_r.state, windows->player.position.x, windows->player.position.y);
@@ -161,10 +177,10 @@ void left_animation(t_windows *windows, int vitesse)
 
 void right_animation(t_windows *windows, int vitesse)
 {
-	static int right = 0;
+	static int right = 2;
 
-	if (right >= 1000)
-		right = 0;
+	if (right > 4)
+		right = 2;
 	right++;
 	if (right % 3 == 0)
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.right_r.state, windows->player.position.x, windows->player.position.y);
@@ -175,28 +191,11 @@ void right_animation(t_windows *windows, int vitesse)
 	windows->player.position.x += vitesse;
 }
 
-int key_release(int keycode, t_windows *windows)
-{
-	if (keycode == 119 || keycode == 115 || keycode == 97 || keycode == 100 || keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)
-	{
-		//maps(windows);
-		if (keycode == 119 || keycode == 13)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.up_s.state, windows->player.position.x, windows->player.position.y);
-		if (keycode == 115  || keycode == 1)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.down_s.state, windows->player.position.x, windows->player.position.y);
-		if (keycode == 97 || keycode == 0)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.left_s.state, windows->player.position.x, windows->player.position.y);
-		if (keycode == 100 || keycode == 2)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.right_s.state, windows->player.position.x, windows->player.position.y);
-	}
-	return (0);
-}
-
 int key_press(int keycode, t_windows *windows)
 {
 	if (keycode == 119 || keycode == 115 || keycode == 97 || keycode == 100 || keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)
 	{
-		//maps(windows);
+		maps(windows);
 		if (keycode == 119 || keycode == 13)
 			up_animation(windows, 7);
 		if (keycode == 115 || keycode == 1)
@@ -215,8 +214,22 @@ int key_press(int keycode, t_windows *windows)
 			windows->player.position.y = windows->size.y - 30;
 		printf("X : %d\nY : %d\n", windows->player.position.x, windows->player.position.y);
 	}
+	else if (keycode == 53)
+	{
+		mlx_destroy_window(windows->mlx, windows->mlx_win);
+		exit(0);
+	}
 	return (0);
 }
+
+int close_click(int keycode, t_windows *windows)
+{
+	(void) windows;
+	(void) keycode;
+	printf("des famille");
+	return (0);
+}
+
 
 int	key_hook(int keycode, t_windows *windows)
 {
@@ -224,12 +237,6 @@ int	key_hook(int keycode, t_windows *windows)
 	printf("key : %d\n", keycode);
 	return (0);
 }
-
-/*
-	Function maps fait crash sur macOS mais pas sur linux
-	Les touch son differant sur wsl et macOS
-	Valgrind segfault sous macOS
-*/
 
 int	main(void)
 {
@@ -244,14 +251,16 @@ int	main(void)
 	windows.mlx = mlx_init();
 	windows.mlx_win = mlx_new_window(windows.mlx, windows.size.x, windows.size.y, "Ronflex adventure!");
 	ft_define_player(&windows);
-	
-	//maps(&windows);
+	ft_define_item(&windows);
+
+	maps(&windows);
 
 	mlx_put_image_to_window(windows.mlx, windows.mlx_win, windows.player.right_s.state, windows.player.position.x, windows.player.position.y);
 	mlx_hook(windows.mlx_win, 2, 1L<<0, key_press, &windows);
-	mlx_hook(windows.mlx_win, 3, 1L<<1, key_release, &windows);
 
 	mlx_key_hook(windows.mlx_win, key_hook, &windows);
+	//Visiblement ne lance pas ma commande pour kill le programme voir unction close_click
+	mlx_hook(windows.mlx_win, 17, 1L<<6, close_click, &windows);
 
 	mlx_loop(windows.mlx);
 	return (0);
