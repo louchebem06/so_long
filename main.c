@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/08 15:25:24 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/08 17:53:21 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+
+#define UP 0
+#define DOWN 1
+#define LEFT 2
+#define RIGHT 3
 
 typedef struct s_player
 {
@@ -83,30 +88,48 @@ void maps(t_windows *windows)
 		}
 		position.x += 30;
 	}
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.superball.state, 30, 30);
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.wall.state, 60, 60);
+	//mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.superball.state, 30, 30);
+	//mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.wall.state, 60, 60);
 }
 
 void refresh_maps(t_windows *windows)
 {
 	t_position position;
 
-	position.x = 0;
-	position.y = 0;
-	while (position.x < windows->player.position.x)
-		position.x += 30;
-	while (position.y < windows->player.position.y)
-		position.y += 30;
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
-	if (windows->player.direction < 4)
+	position.x = (int)windows->player.position.x / 30 * 30;
+	position.y = (int)windows->player.position.y / 30 * 30;
+	if (windows->player.direction == UP)
 	{
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y - 30);
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y + 30);
+	}
+	if (windows->player.direction == DOWN)
+	{
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y - 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y - 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+	}
+	if (windows->player.direction == LEFT)
+	{
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x , position.y + 30);
+	}
+	if (windows->player.direction == RIGHT)
+	{
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - 30, position.y);
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - 30, position.y + 30);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - 30, position.y - 30);
 	}
 }
 
@@ -137,7 +160,7 @@ void up_animation(t_windows *windows, float vitesse)
 {
 	static int up = 2;
 
-	windows->player.direction = 0;
+	windows->player.direction = UP;
 	if (up > 4)
 		up = 2;
 	up++;
@@ -154,7 +177,7 @@ void down_animation(t_windows *windows, float vitesse)
 {
 	static int down = 2;
 
-	windows->player.direction = 1;
+	windows->player.direction = DOWN;
 	if (down > 4)
 		down = 2;
 	down++;
@@ -171,7 +194,7 @@ void left_animation(t_windows *windows, float vitesse)
 {
 	static int left = 2;
 
-	windows->player.direction = 2;
+	windows->player.direction = LEFT;
 	if (left > 4)
 		left = 2;
 	left++;
@@ -188,7 +211,7 @@ void right_animation(t_windows *windows, float vitesse)
 {
 	static int right = 2;
 
-	windows->player.direction = 3;
+	windows->player.direction = RIGHT;
 	if (right > 4)
 		right = 2;
 	right++;
@@ -252,8 +275,8 @@ int	main(void)
 {
 	t_windows windows;
 
-	windows.size.x = 30*20;
-	windows.size.y = 30*20;
+	windows.size.x = 30*10;
+	windows.size.y = 30*10;
 
 	windows.player.position.x = windows.size.x/2-15;
 	windows.player.position.y = windows.size.y/2-15;
@@ -266,7 +289,7 @@ int	main(void)
 	maps(&windows);
 
 	mlx_put_image_to_window(windows.mlx, windows.mlx_win, windows.player.right_s.state, windows.player.position.x, windows.player.position.y);
-	windows.player.direction = 3;
+	windows.player.direction = RIGHT;
 	mlx_hook(windows.mlx_win, 2, 1L<<0, key_press, &windows);
 
 	mlx_key_hook(windows.mlx_win, key_hook, &windows);
