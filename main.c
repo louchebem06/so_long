@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/08 19:34:40 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/09 17:03:53 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_item
 	t_player superball;
 	t_player wall;
 	t_player ground;
+	t_player exit;
 }			t_item;
 
 typedef struct s_state
@@ -70,6 +71,7 @@ typedef struct s_windows
 	t_state player;
 	t_item item;
 	t_position size;
+	char **maps;
 }			t_windows;
 
 void maps(t_windows *windows)
@@ -84,71 +86,75 @@ void maps(t_windows *windows)
 		while (position.y < windows->size.y)
 		{
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
-			if (position.y >= windows->size.y/2)
-				position.y += 29;
-			else
-				position.y += 30;
+			position.y += 30;
 		}
-		if (position.x >= windows->size.x/2)
-			position.x += 29;
-		else
-			position.x += 30;
+		position.x += 30;
 	}
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.superball.state, 30, 30);
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.wall.state, 60, 60);
+	int i = 0;
+	while (windows->maps[i])
+	{
+		int j = 0;
+		while (windows->maps[i][j])
+		{
+			if (windows->maps[i][j] == '1')
+				mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.wall.state, j * 30, i * 30);
+			else if (windows->maps[i][j] == 'C')
+				mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.superball.state, j * 30, i * 30);
+			else if (windows->maps[i][j] == 'E')
+				mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.exit.state, j * 30, i * 30);
+			else if (windows->maps[i][j] == 'P')
+			{
+				windows->player.position.x = j * 30;
+				windows->player.position.y = i * 30;
+			}
+			j++;
+		}
+		i++;
+	}
+	//mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.superball.state, 30, 30);
+	//mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.wall.state, 60, 60);
 }
 
 void refresh_maps(t_windows *windows)
 {
 	t_position position;
-	int dif_x;
-	int dif_y;
 
 	position.x = (int)windows->player.position.x / 30 * 30;
 	position.y = (int)windows->player.position.y / 30 * 30;
 
-	if (position.x >= windows->size.x/2)
-		dif_x = 29;
-	else
-		dif_x = 30;
-
-	if (position.y >= windows->size.y/2)
-		dif_y = 29;
-	else
-		dif_y = 30;
 
 	if (windows->player.direction == UP)
 	{
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + dif_x, position.y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + dif_y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + dif_x, position.y + dif_y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y + 30);
 	}
 	if (windows->player.direction == DOWN)
 	{
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y - dif_y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + dif_x, position.y - dif_y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + dif_x, position.y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + dif_x, position.y + dif_y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + dif_y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y - 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y - 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
 	}
 	if (windows->player.direction == LEFT)
 	{
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + dif_x, position.y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + dif_x, position.y + dif_y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x , position.y + dif_y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x , position.y + 30);
 	}
 	if (windows->player.direction == RIGHT)
 	{
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + dif_x, position.y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + dif_x, position.y + dif_y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + dif_y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + dif_y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - dif_x, position.y);
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - dif_x, position.y + dif_y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - 30, position.y);
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x - 30, position.y + 30);
 	}
 }
 
@@ -173,6 +179,7 @@ void ft_define_item(t_windows *windows)
 	windows->item.superball.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/superball.xpm", &windows->item.superball.height, &windows->item.superball.width);
 	windows->item.wall.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/wall.xpm", &windows->item.wall.height, &windows->item.wall.width);
 	windows->item.ground.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/ground.xpm", &windows->item.ground.height, &windows->item.ground.width);
+	windows->item.exit.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/exit.xpm", &windows->item.exit.height, &windows->item.exit.width);
 }
 
 void up_animation(t_windows *windows, float vitesse)
@@ -247,23 +254,122 @@ int key_press(int keycode, t_windows *windows)
 {
 	if (keycode == 119 || keycode == 115 || keycode == 97 || keycode == 100 || keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)
 	{
-		refresh_maps(windows);
+		//refresh_maps(windows);
 		if (keycode == 119 || keycode == 13)
-			up_animation(windows, 7.5);
+		{
+			if(windows->player.direction == UP)
+			{
+				if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30] == '1')
+					up_animation(windows, 0);
+				else
+					up_animation(windows, 7.5);
+			}
+			else
+			{
+				up_animation(windows, 0);
+				if ((int)windows->player.position.x % 30 != 0)
+				{
+					if ((int)(windows->player.position.x + 7.5) % 30 == 0)
+						windows->player.position.x += 7.5;
+					else if ((int)(windows->player.position.x - 7.5) % 30 == 0)
+						windows->player.position.x -= 7.5;
+					else if ((int)(windows->player.position.x + 15) % 30 == 0)
+						windows->player.position.x += 15;
+					else if ((int)(windows->player.position.x - 15) % 30 == 0)
+						windows->player.position.x -= 15;
+					else if ((int)(windows->player.position.x + 22.5) % 30 == 0)
+						windows->player.position.x += 22.5;
+					else if ((int)(windows->player.position.x - 22.5) % 30 == 0)
+						windows->player.position.x -= 22.5;
+				}
+			}
+		}
 		if (keycode == 115 || keycode == 1)
-			down_animation(windows, 7.5);
+		{
+			if(windows->player.direction == DOWN)
+			{
+				if (windows->maps[(int)windows->player.position.y/30+1][(int)windows->player.position.x/30] == '1')
+					down_animation(windows, 0);
+				else
+					down_animation(windows, 7.5);
+			}
+			else
+			{
+				down_animation(windows, 0);
+				if ((int)windows->player.position.x % 30 != 0)
+				{
+					if ((int)(windows->player.position.x + 7.5) % 30 == 0)
+						windows->player.position.x += 7.5;
+					else if ((int)(windows->player.position.x - 7.5) % 30 == 0)
+						windows->player.position.x -= 7.5;
+					else if ((int)(windows->player.position.x + 15) % 30 == 0)
+						windows->player.position.x += 15;
+					else if ((int)(windows->player.position.x - 15) % 30 == 0)
+						windows->player.position.x -= 15;
+					else if ((int)(windows->player.position.x + 22.5) % 30 == 0)
+						windows->player.position.x += 22.5;
+					else if ((int)(windows->player.position.x - 22.5) % 30 == 0)
+						windows->player.position.x -= 22.5;
+				}
+			}
+		}
 		if (keycode == 97 || keycode == 0)
-			left_animation(windows, 7.5);
+		{
+			if(windows->player.direction == LEFT)
+			{
+				if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30] == '1')
+					left_animation(windows, 0);
+				else
+					left_animation(windows, 7.5);
+			}
+			else
+			{
+				left_animation(windows, 0);
+				if ((int)windows->player.position.y % 30 != 0)
+				{
+					if ((int)(windows->player.position.y + 7.5) % 30 == 0)
+						windows->player.position.y += 7.5;
+					else if ((int)(windows->player.position.y - 7.5) % 30 == 0)
+						windows->player.position.y -= 7.5;
+					else if ((int)(windows->player.position.y + 15) % 30 == 0)
+						windows->player.position.y += 15;
+					else if ((int)(windows->player.position.y - 15) % 30 == 0)
+						windows->player.position.y -= 15;
+					else if ((int)(windows->player.position.y + 22.5) % 30 == 0)
+						windows->player.position.y += 22.5;
+					else if ((int)(windows->player.position.y - 22.5) % 30 == 0)
+						windows->player.position.y -= 22.5;
+				}
+			}
+		}
 		if (keycode == 100 || keycode == 2)
-			right_animation(windows, 7.5);
-		if (windows->player.position.x <= 0)
-			windows->player.position.x = 0;
-		if (windows->player.position.y <= 0)
-			windows->player.position.y = 0;
-		if (windows->player.position.x >= windows->size.x - 30)
-			windows->player.position.x = windows->size.x - 30;
-		if (windows->player.position.y >= windows->size.y - 30)
-			windows->player.position.y = windows->size.y - 30;
+		{
+			if(windows->player.direction == RIGHT)
+				if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30+1] == '1')
+					right_animation(windows, 0);
+				else
+					right_animation(windows, 7.5);
+			else
+			{
+				right_animation(windows, 0);
+				if ((int)windows->player.position.y % 30 != 0)
+				{
+					if ((int)(windows->player.position.y + 7.5) % 30 == 0)
+						windows->player.position.y += 7.5;
+					else if ((int)(windows->player.position.y - 7.5) % 30 == 0)
+						windows->player.position.y -= 7.5;
+					else if ((int)(windows->player.position.y + 15) % 30 == 0)
+						windows->player.position.y += 15;
+					else if ((int)(windows->player.position.y - 15) % 30 == 0)
+						windows->player.position.y -= 15;
+					else if ((int)(windows->player.position.y + 22.5) % 30 == 0)
+						windows->player.position.y += 22.5;
+					else if ((int)(windows->player.position.y - 22.5) % 30 == 0)
+						windows->player.position.y -= 22.5;
+				}
+			}
+		}
+
 		printf("X : %f\nY : %f\n", windows->player.position.x, windows->player.position.y);
 	}
 	else if (keycode == 53)
@@ -293,17 +399,66 @@ void 	parsing_maps(t_windows *windows)
 {
 	(void) windows;
 	char *line;
-	char patch[] = "./maps/simple.ber";
-	char patch2[] = "./maps/simple2.ber";
-	char invalid[] = "./maps/invalid.ber";
-	(void) patch2;
-	(void) patch;
-	(void) invalid;
+	char path[] = "./maps/simple.ber";
+	char path2[] = "./maps/simple2.ber";
+	char invalid_maps[] = "./maps/invalid_maps.ber";
+	char invalid_path[] = "./maps/invalid.ber";
+	(void) path2;
+	(void) path;
+	(void) invalid_maps;
+	(void) invalid_path;
 	int fd;
 	line = 0;
-	fd = open(patch, O_RDONLY);
-	get_next_line(fd, &line);
-	printf("%s\n", line);
+	fd = open(invalid_maps, O_RDONLY);
+	int state = 1;
+	int turn = 0;
+	int size_first_line = 0;
+	int i = 0;
+	while (state == 1)
+	{
+		i = 0;
+		state = get_next_line(fd, &line);
+		if (turn == 0)
+			size_first_line = ft_strlen(line);
+		else if (size_first_line < ft_strlen(line))
+		{
+			printf("error\nMaps is invalid line %d is too small\n", turn+1);
+		}
+		else if (size_first_line < ft_strlen(line))
+		{
+			printf("error\nMaps is invalid line %d is too long\n", turn+1);
+		}
+		if (state == 0 || turn == 0)
+		{
+			while (line[i])
+			{
+				if (line[i] != '1')
+					printf("error\nWall is not found line : %d\n", turn + 1);
+				i++;
+			}
+		}
+		else
+		{
+			if (line[0] != '1' || line[ft_strlen(line) - 1] != '1')
+				printf("error\nWall is not found line : %d\n", turn + 1);
+		}
+		turn++;
+		windows->size.y = turn * 30;
+	}
+	close(fd);
+	state = 1;
+	windows->size.x = size_first_line * 30;
+	fd = open(invalid_maps, O_RDONLY);
+	i = 0;
+	windows->maps = ft_calloc(sizeof(char *), windows->size.x + 1);
+	while (state == 1)
+	{
+		state = get_next_line(fd, &line);
+		windows->maps[i] = ft_strdup(line);
+		i++;
+	}
+	close(fd);
+	i = -1;
 }
 
 int	main(void)
@@ -311,12 +466,6 @@ int	main(void)
 	t_windows windows;
 
 	parsing_maps(&windows);
-
-	windows.size.x = 30*20;
-	windows.size.y = 30*20;
-
-	windows.player.position.x = windows.size.x/2-15;
-	windows.player.position.y = windows.size.y/2-15;
 
 	windows.mlx = mlx_init();
 	windows.mlx_win = mlx_new_window(windows.mlx, windows.size.x, windows.size.y, "so_long!");
