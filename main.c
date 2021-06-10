@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/10 09:37:37 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/10 19:19:27 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ typedef struct s_state
 	t_player	right_l;
 	t_player	right_r;
 	t_position position;
+	t_position last_position;
+	int last;
 	int direction;
 }			t_state;
 
@@ -79,6 +81,7 @@ typedef struct s_windows
 	void	*mlx_win;
 	t_state player;
 	t_data pixel_correction;
+	t_data end_animation;
 	t_item item;
 	t_position size;
 	char **maps;
@@ -145,6 +148,17 @@ void refresh_maps(t_windows *windows)
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
 		if (windows->maps[(int)windows->player.position.y/30+1][(int)windows->player.position.x/30] != '1')
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+		if (windows->player.last)
+		{
+			position.x = (int)windows->player.last_position.x / 30 * 30;
+			position.y = (int)windows->player.last_position.y / 30 * 30;
+
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
+			if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30+1] != '1')
+				mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x+30, position.y);
+
+			windows->player.last = 0;
+		}
 	}
 	else if (windows->player.direction == DOWN)
 	{
@@ -153,12 +167,34 @@ void refresh_maps(t_windows *windows)
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y - 30);
 		if ((int)position.y/30 != (int)position.y/30+1 && windows->maps[(int)windows->player.position.y/30+1][(int)windows->player.position.x/30] != '1')
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+		if (windows->player.last)
+		{
+			position.x = (int)windows->player.last_position.x / 30 * 30;
+			position.y = (int)windows->player.last_position.y / 30 * 30;
+
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
+			if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30+1] != '1')
+				mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x + 30, position.y);
+
+			windows->player.last = 0;
+		}
 	}
 	else if (windows->player.direction == LEFT)
 	{
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
 		if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30+1] != '1')
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x+30, position.y);
+		if (windows->player.last)
+		{
+			position.x = (int)windows->player.last_position.x / 30 * 30;
+			position.y = (int)windows->player.last_position.y / 30 * 30;
+
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
+			if (windows->maps[(int)windows->player.position.y/30+1][(int)windows->player.position.x/30] != '1')
+				mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+
+			windows->player.last = 0;
+		}
 	}
 	else if (windows->player.direction == RIGHT)
 	{
@@ -167,6 +203,17 @@ void refresh_maps(t_windows *windows)
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x-30, position.y);
 		if ((int)position.x/30 != (int)position.x/30+1 && windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30+1] != '1')
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x+30, position.y);
+		if (windows->player.last)
+		{
+			position.x = (int)windows->player.last_position.x / 30 * 30;
+			position.y = (int)windows->player.last_position.y / 30 * 30;
+
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
+			if (windows->maps[(int)windows->player.position.y/30+1][(int)windows->player.position.x/30] != '1')
+				mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
+
+			windows->player.last = 0;
+		}
 	}
 
 	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->pixel_correction.img, 0, 0);
@@ -241,16 +288,23 @@ void player_animation(t_windows *windows, float vitesse, int state, int directio
 		move = 0;
 }
 
+//void end_via_animation(t_windows *windows);
+
 int key_press(int keycode, t_windows *windows)
 {
 	static int vitesse = 0;
 	vitesse++;
 	int setting_vitesse = 5;
-	if (keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)
+	/*if (keycode == 12)//q
+	{
+		end_via_animation(windows);
+	}*/
+	if (keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)//wsda
 	{
 		refresh_maps(windows);
-		if (keycode == 13)
+		if (keycode == 13)//w
 		{
+			printf("UP\n");
 			if(windows->player.direction == UP)
 			{
 				if (vitesse % setting_vitesse == 0)
@@ -269,6 +323,9 @@ int key_press(int keycode, t_windows *windows)
 				player_animation(windows, 0, 1, UP);
 				if ((int)windows->player.position.x % 30 != 0)
 				{
+					windows->player.last = 1;
+					windows->player.last_position.x = windows->player.position.x;
+					windows->player.last_position.y = windows->player.position.y;
 					if ((int)(windows->player.position.x + 7.5) % 30 == 0)
 						windows->player.position.x += 7.5;
 					else if ((int)(windows->player.position.x - 7.5) % 30 == 0)
@@ -281,11 +338,14 @@ int key_press(int keycode, t_windows *windows)
 						windows->player.position.x += 22.5;
 					else if ((int)(windows->player.position.x - 22.5) % 30 == 0)
 						windows->player.position.x -= 22.5;
+					else
+						windows->player.last = 0;
 				}
 			}
 		}
-		if (keycode == 1)
+		if (keycode == 1)//s
 		{
+			printf("DOWN\n");
 			if(windows->player.direction == DOWN)
 			{
 				if (vitesse % setting_vitesse == 0)
@@ -303,6 +363,9 @@ int key_press(int keycode, t_windows *windows)
 				player_animation(windows, 0, 1, DOWN);
 				if ((int)windows->player.position.x % 30 != 0)
 				{
+					windows->player.last = 1;
+					windows->player.last_position.x = windows->player.position.x;
+					windows->player.last_position.y = windows->player.position.y;
 					if ((int)(windows->player.position.x + 7.5) % 30 == 0)
 						windows->player.position.x += 7.5;
 					else if ((int)(windows->player.position.x - 7.5) % 30 == 0)
@@ -315,11 +378,14 @@ int key_press(int keycode, t_windows *windows)
 						windows->player.position.x += 22.5;
 					else if ((int)(windows->player.position.x - 22.5) % 30 == 0)
 						windows->player.position.x -= 22.5;
+					else
+						windows->player.last = 0;
 				}
 			}
 		}
-		if (keycode == 0)
+		if (keycode == 0)//a
 		{
+			printf("LEFT\n");
 			if(windows->player.direction == LEFT)
 			{
 				if (vitesse % setting_vitesse == 0)
@@ -340,6 +406,9 @@ int key_press(int keycode, t_windows *windows)
 				player_animation(windows, 0, 1, LEFT);
 				if ((int)windows->player.position.y % 30 != 0)
 				{
+					windows->player.last = 1;
+					windows->player.last_position.x = windows->player.position.x;
+					windows->player.last_position.y = windows->player.position.y;
 					if ((int)(windows->player.position.y + 7.5) % 30 == 0)
 						windows->player.position.y += 7.5;
 					else if ((int)(windows->player.position.y - 7.5) % 30 == 0)
@@ -352,11 +421,14 @@ int key_press(int keycode, t_windows *windows)
 						windows->player.position.y += 22.5;
 					else if ((int)(windows->player.position.y - 22.5) % 30 == 0)
 						windows->player.position.y -= 22.5;
+					else
+						windows->player.last = 0;
 				}
 			}
 		}
-		if (keycode == 2)
+		if (keycode == 2)//d
 		{
+			printf("RIGHT\n");
 			if(windows->player.direction == RIGHT)
 			{
 				if (vitesse % setting_vitesse == 0)
@@ -374,6 +446,9 @@ int key_press(int keycode, t_windows *windows)
 				player_animation(windows, 0, 1, RIGHT);
 				if ((int)windows->player.position.y % 30 != 0)
 				{
+					windows->player.last = 1;
+					windows->player.last_position.x = windows->player.position.x;
+					windows->player.last_position.y = windows->player.position.y;
 					if ((int)(windows->player.position.y + 7.5) % 30 == 0)
 						windows->player.position.y += 7.5;
 					else if ((int)(windows->player.position.y - 7.5) % 30 == 0)
@@ -386,6 +461,8 @@ int key_press(int keycode, t_windows *windows)
 						windows->player.position.y += 22.5;
 					else if ((int)(windows->player.position.y - 22.5) % 30 == 0)
 						windows->player.position.y -= 22.5;
+					else
+						windows->player.last = 0;
 				}
 			}
 		}
@@ -401,10 +478,28 @@ int key_press(int keycode, t_windows *windows)
 	return (0);
 }
 
-int	key_hook(int keycode, t_windows *windows)
+int key_release(int keycode, t_windows *windows)
 {
-	(void) windows;
-	printf("key : %d\n", keycode);
+	if (keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)//wsda
+	{
+		refresh_maps(windows);
+		if (keycode == 13)//w
+		{
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.up_s.state, windows->player.position.x, windows->player.position.y);
+		}
+		if (keycode == 1)//s
+		{
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.down_s.state, windows->player.position.x, windows->player.position.y);
+		}
+		if (keycode == 0)//a
+		{
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.left_s.state, windows->player.position.x, windows->player.position.y);
+		}
+		if (keycode == 2)//d
+		{
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->player.right_s.state, windows->player.position.x, windows->player.position.y);
+		}
+	}
 	return (0);
 }
 
@@ -420,7 +515,7 @@ void 	parsing_maps(t_windows *windows)
 	(void) path;
 	(void) invalid_maps;
 	(void) invalid_path;
-	char *test = strdup(path);
+	char *test = strdup(path2);
 	int fd;
 	line = 0;
 	fd = open(test, O_RDONLY);
@@ -434,11 +529,11 @@ void 	parsing_maps(t_windows *windows)
 		state = get_next_line(fd, &line);
 		if (turn == 0)
 			size_first_line = ft_strlen(line);
-		else if (size_first_line < ft_strlen(line))
+		else if (size_first_line < (int)ft_strlen(line))
 		{
 			printf("error\nMaps is invalid line %d is too small\n", turn+1);
 		}
-		else if (size_first_line < ft_strlen(line))
+		else if (size_first_line < (int)ft_strlen(line))
 		{
 			printf("error\nMaps is invalid line %d is too long\n", turn+1);
 		}
@@ -511,14 +606,61 @@ void ft_correction_pixel(t_windows *windows)
 		}
 	}
 }
+/*
+void	end_animation(t_windows *windows)
+{
+	static int state = 0;
+	static int move = 0;
+	if (state == 0)
+	{
+		windows->end_animation.img = mlx_new_image(windows->mlx, windows->size.x, windows->size.y);
+		windows->end_animation.addr = mlx_get_data_addr(windows->end_animation.img, &windows->end_animation.bits_per_pixel, &windows->end_animation.line_length, &windows->end_animation.endian);
+		for (int y = 0; y < windows->size.y; y++)
+			for (int x = 0; x < windows->size.x; x++)
+				ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(255, 0, 0, 0));
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, 0, 0);
+		state++;
+	}
 
-/*int close_click(int keycode, t_windows *windows)
+	if (state == 1)
+	{
+		for (int y = windows->size.y/2-7; y < windows->size.y/2+8; y++)
+			for (int x = windows->size.x/2+7; x < windows->size.x/2+22; x++)
+				ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(0, 150, 150, 150));
+		state++;
+	}
+}
+
+void end_via_animation(t_windows *windows)
+{
+	static int i = 0;
+	char str[] = "coucou";
+
+	if (i == 0)
+	{
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, 0, 0);
+		while (i < 10000)
+		{
+			printf("%d\n", i);
+			i++;
+		}
+		end_via_animation(windows);
+	}
+	else
+	{
+		ft_mlx_pixel_put(&windows->end_animation, 15, 15, create_trgb(0, 150, 150, 150));
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, 15, 15);
+	}
+}
+*/
+
+int close_click(int keycode, t_windows *windows)
 {
 	(void) windows;
 	(void) keycode;
 	printf("des famille");
 	return (0);
-}*/
+}
 
 int	main(void)
 {
@@ -530,6 +672,8 @@ int	main(void)
 	windows.mlx_win = mlx_new_window(windows.mlx, windows.size.x, windows.size.y, "so_long!");
 	
 	ft_correction_pixel(&windows);
+
+	//end_animation(&windows);
 	
 	ft_define_player(&windows);
 	ft_define_item(&windows);
@@ -538,11 +682,10 @@ int	main(void)
 
 	mlx_put_image_to_window(windows.mlx, windows.mlx_win, windows.player.right_s.state, windows.player.position.x, windows.player.position.y);
 	windows.player.direction = RIGHT;
-	mlx_hook(windows.mlx_win, 2, 1L<<0, key_press, &windows);
 
-	mlx_key_hook(windows.mlx_win, key_hook, &windows);
-	//Visiblement ne lance pas ma commande pour kill le programme voir fonction close_click
-	//mlx_hook(windows.mlx_win, 17, 1L<<6, close_click, &windows);
+	mlx_hook(windows.mlx_win, 2, 1L<<0, key_press, &windows);
+	mlx_hook(windows.mlx_win, 3, 1L<<1, key_release, &windows);
+	mlx_hook(windows.mlx_win, 4, 0L, close_click, &windows);
 
 	mlx_loop(windows.mlx);
 	return (0);

@@ -1,8 +1,7 @@
 - Verifier que il y a C E et P.
 - Fixe 1 move, quand on ne reste pas appuyer.
-- Fixe quand ont appuye plus d'avoir la position s
-- Decalage quand recalibrage.
 - Faire reaparaitre les pokeball et exit quand pas deçu.
-- Afficher move dans le shell.
 - Compter les pokeball atrapper.
 - Sortir les stats quand pokeball atrapper et sur case exit and screen end
+- end screen animation
+- Close windos for btn red
