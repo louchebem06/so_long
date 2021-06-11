@@ -6,45 +6,45 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 19:32:48 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/11 19:36:13 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/11 23:35:49 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-#include "minilibx/mlx.h"
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include "libft/header/libft.h"
+# include "minilibx/mlx.h"
+# include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include "libft/header/libft.h"
 
-#define UP 0
-#define DOWN 1
-#define LEFT 2
-#define RIGHT 3
+# define UP 0
+# define DOWN 1
+# define LEFT 2
+# define RIGHT 3
 
 typedef struct s_player
 {
-	void *state;
-	int height;
-	int width;
+	void	*state;
+	int		height;
+	int		width;
 }			t_player;
 
 typedef struct s_position
 {
-	float x;
-	float y;
+	float	x;
+	float	y;
 }			t_position;
 
 typedef struct s_item
 {
-	t_player superball;
-	t_player wall;
-	t_player ground;
-	t_player exit;
-	t_player congratulation;
+	t_player	superball;
+	t_player	wall;
+	t_player	ground;
+	t_player	exit;
+	t_player	congratulation;
 }			t_item;
 
 typedef struct s_state
@@ -61,13 +61,13 @@ typedef struct s_state
 	t_player	right_s;
 	t_player	right_l;
 	t_player	right_r;
-	t_position position;
-	t_position last_position;
-	int last;
-	int direction;
+	t_position	position;
+	t_position	last_position;
+	int			last;
+	int			direction;
 }			t_state;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	void	*img;
 	char	*addr;
@@ -76,20 +76,40 @@ typedef struct	s_data
 	int		endian;
 }				t_data;
 
+typedef struct s_end_animation
+{
+	int	x;
+	int	neg_x;
+	int	y;
+	int	save_y;
+	int	neg_y;
+	int	save_neg_y;
+}				t_end_animation;
+
 typedef struct s_windows
 {
-	void	*mlx;
-	void	*mlx_win;
-	t_state player;
-	t_data pixel_correction;
-	t_data end_animation;
-	t_item item;
-	t_position size;
-	char **maps;
-	int score;
-	int key;
+	void		*mlx;
+	void		*mlx_win;
+	t_state		player;
+	t_data		pixel_correction;
+	t_data		end_animation;
+	t_item		item;
+	t_position	size;
+	char		**maps;
+	int			score;
+	int			key;
 }			t_windows;
 
-int	get_next_line(int fd, char **line);
+int		get_next_line(int fd, char **line);
+void	ft_mlx_pixel_put(t_data *data, int x, int y, int color);
+int		close_click(int keycode, t_windows *windows);
+void	ft_define_item(t_windows *windows);
+void	ft_define_player(t_windows *windows);
+int		create_trgb(int t, int r, int g, int b);
+void	ft_correction_pixel(t_windows *windows);
+void	end_screen(t_windows *windows);
+void	end_via_animation(t_windows *windows);
+void	final_screen_end(t_windows *windows);
+void	end_animation(t_windows *windows);
 
 #endif

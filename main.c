@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/11 19:33:51 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/11 22:20:52 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,6 @@
 //https://harm-smits.github.io/42docs/libs/minilibx/getting_started.html
 
 #include "so_long.h"
-
-void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
-}
 
 void maps(t_windows *windows)
 {
@@ -162,31 +154,6 @@ void refresh_maps(t_windows *windows)
 	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->pixel_correction.img, 0, 0);
 }
 
-void ft_define_player(t_windows *windows)
-{
-	windows->player.up_s.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/up_s.xpm", &windows->player.up_s.height, &windows->player.up_s.width);
-	windows->player.up_l.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/up_l.xpm", &windows->player.up_l.height, &windows->player.up_l.width);
-	windows->player.up_r.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/up_r.xpm", &windows->player.up_r.height, &windows->player.up_r.width);
-	windows->player.down_s.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/down_s.xpm", &windows->player.down_s.height, &windows->player.down_s.width);
-	windows->player.down_l.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/down_l.xpm", &windows->player.down_l.height, &windows->player.down_l.width);
-	windows->player.down_r.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/down_r.xpm", &windows->player.down_r.height, &windows->player.down_r.width);
-	windows->player.left_s.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/left_s.xpm", &windows->player.left_s.height, &windows->player.left_s.width);
-	windows->player.left_l.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/left_l.xpm", &windows->player.left_l.height, &windows->player.left_l.width);
-	windows->player.left_r.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/left_r.xpm", &windows->player.left_r.height, &windows->player.left_r.width);
-	windows->player.right_s.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/right_s.xpm", &windows->player.right_s.height, &windows->player.right_s.width);
-	windows->player.right_l.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/right_l.xpm", &windows->player.right_l.height, &windows->player.right_l.width);
-	windows->player.right_r.state = mlx_xpm_file_to_image(windows->mlx, "./asset/ronflex/right_r.xpm", &windows->player.right_r.height, &windows->player.right_r.width);
-}
-
-void ft_define_item(t_windows *windows)
-{
-	windows->item.superball.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/superball.xpm", &windows->item.superball.height, &windows->item.superball.width);
-	windows->item.wall.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/wall.xpm", &windows->item.wall.height, &windows->item.wall.width);
-	windows->item.ground.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/ground.xpm", &windows->item.ground.height, &windows->item.ground.width);
-	windows->item.exit.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/exit.xpm", &windows->item.exit.height, &windows->item.exit.width);
-	windows->item.congratulation.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/congratulation.xpm", &windows->item.congratulation.height, &windows->item.congratulation.width);
-}
-
 void player_animation(t_windows *windows, float vitesse, int state, int direction)
 {
 	static int move = 0;
@@ -232,23 +199,6 @@ void player_animation(t_windows *windows, float vitesse, int state, int directio
 		move = 0;
 }
 
-void end_via_animation(t_windows *windows);
-
-void end_screen(t_windows *windows)
-{
-	printf("\n\n");
-	printf(" _____                             _         _       _   _  \n");            
-	printf("/  __ \\                           | |       | |     | | (_)\n");            
-	printf("| /  \\/ ___  _ __   __ _ _ __ __ _| |_ _   _| | __ _| |_ _  ___  _ __  \n");  
-	printf("| |    / _ \\| '_ \\ / _` | '__/ _` | __| | | | |/ _` | __| |/ _ \\| '_ \\ \n");  
-	printf("| \\__/\\ (_) | | | | (_| | | | (_| | |_| |_| | | (_| | |_| | (_) | | | |\n");  
-	printf(" \\____/\\___/|_| |_|\\__, |_|  \\__,_|\\__|\\__,_|_|\\__,_|\\__|_|\\___/|_| |_|\n");  
-	printf("                    __/ |                                              \n");  
-	printf("                   |___/                                               \n");
-	end_via_animation(windows);
-	printf("\n\nYour score : %d\n", windows->score);
-}
-
 int key_press(int keycode, t_windows *windows)
 {
 	static int vitesse = 0;
@@ -259,7 +209,7 @@ int key_press(int keycode, t_windows *windows)
 		refresh_maps(windows);
 		if (keycode == 13)//w
 		{
-			printf("UP\n");
+			ft_putstr_fd("UP\n", 1);
 			if(windows->player.direction == UP)
 			{
 				if (vitesse % setting_vitesse == 0)
@@ -300,7 +250,7 @@ int key_press(int keycode, t_windows *windows)
 		}
 		if (keycode == 1)//s
 		{
-			printf("DOWN\n");
+			ft_putstr_fd("DOWN\n", 1);
 			if(windows->player.direction == DOWN)
 			{
 				if (vitesse % setting_vitesse == 0)
@@ -340,7 +290,7 @@ int key_press(int keycode, t_windows *windows)
 		}
 		if (keycode == 0)//a
 		{
-			printf("LEFT\n");
+			ft_putstr_fd("LEFT\n", 1);
 			if(windows->player.direction == LEFT)
 			{
 				if (vitesse % setting_vitesse == 0)
@@ -383,7 +333,7 @@ int key_press(int keycode, t_windows *windows)
 		}
 		if (keycode == 2)//d
 		{
-			printf("RIGHT\n");
+			ft_putstr_fd("RIGHT\n", 1);
 			if(windows->player.direction == RIGHT)
 			{
 				if (vitesse % setting_vitesse == 0)
@@ -452,10 +402,7 @@ int key_press(int keycode, t_windows *windows)
 
 	}
 	else if (keycode == 53)
-	{
-		mlx_destroy_window(windows->mlx, windows->mlx_win);
-		exit(0);
-	}
+		close_click(0, windows);
 	return (0);
 }
 
@@ -484,22 +431,10 @@ int key_release(int keycode, t_windows *windows)
 	return (0);
 }
 
-void 	parsing_maps(t_windows *windows)
+int 	parsing_maps(t_windows *windows, char *file)
 {
-	(void) windows;
 	char *line;
-	char path[] = "./maps/simple.ber";
-	char path2[] = "./maps/simple2.ber";
-	char invalid_maps[] = "./maps/invalid_maps.ber";
-	char invalid_path[] = "./maps/invalid.ber";
-	(void) path2;
-	(void) path;
-	(void) invalid_maps;
-	(void) invalid_path;
-	char *test = strdup(path2);
 	int fd;
-	line = 0;
-	fd = open(test, O_RDONLY);
 	int state = 1;
 	int turn = 0;
 	int size_first_line = 0;
@@ -507,33 +442,57 @@ void 	parsing_maps(t_windows *windows)
 	int pokeball = 0;
 	int exit = 0;
 	int start_position = 0;
+
+	line = 0;
+	fd = open(file, O_RDONLY);
 	while (state == 1)
 	{
 		i = 0;
 		state = get_next_line(fd, &line);
+		if (state == -1)
+		{
+			ft_putstr_fd("error\nFile is nots valid\n", 1);
+			return (1);
+		}
 		if (turn == 0)
 			size_first_line = ft_strlen(line);
 		else if (size_first_line < (int)ft_strlen(line))
 		{
-			printf("error\nMaps is invalid line %d is too small\n", turn+1);
+			ft_putstr_fd("error\nMaps is invalid line ", 1);
+			ft_putnbr_fd(turn+1, 1);
+			ft_putstr_fd(" is too small", 1);
+			return (1);
 		}
 		else if (size_first_line < (int)ft_strlen(line))
 		{
-			printf("error\nMaps is invalid line %d is too long\n", turn+1);
+			ft_putstr_fd("error\nMaps is invalid line ", 1);
+			ft_putnbr_fd(turn+1, 1);
+			ft_putstr_fd(" is too long\n", 1);
+			return (1);
 		}
 		if (state == 0 || turn == 0)
 		{
 			while (line[i])
 			{
 				if (line[i] != '1')
-					printf("error\nWall is not found line : %d\n", turn + 1);
+				{
+					ft_putstr_fd("error\nWall is not found line ", 1);
+					ft_putnbr_fd(turn + 1, 1);
+					ft_putchar_fd('\n', 1);
+					return (1);
+				}
 				i++;
 			}
 		}
 		else
 		{
 			if (line[0] != '1' || line[ft_strlen(line) - 1] != '1')
-				printf("error\nWall is not found line : %d\n", turn + 1);
+			{
+				ft_putstr_fd("error\nWall is not found line ", 1);
+				ft_putnbr_fd(turn + 1, 1);
+				ft_putchar_fd('\n', 1);
+				return (1);
+			}
 		}
 		i = 0;
 		while (line[i])
@@ -551,18 +510,19 @@ void 	parsing_maps(t_windows *windows)
 	}
 	if (pokeball < 1 || exit < 1 || start_position < 1)
 	{
-		printf("error\nyour maps don't content :\n");
+		ft_putstr_fd("error\nYour maps don't content :\n", 1);
 		if (pokeball < 1)
-			printf("	- collectable\n");
+			ft_putstr_fd("	- collectable\n", 1);
 		if (exit < 1)
-			printf("	- exit\n");
+			ft_putstr_fd("	- exit\n", 1);
 		if (start_position < 1)
-			printf("	- start position\n");
+			ft_putstr_fd("	- start position\n", 1);
+		return (1);
 	}
 	close(fd);
 	state = 1;
 	windows->size.x = size_first_line * 30;
-	fd = open(test, O_RDONLY);
+	fd = open(file, O_RDONLY);
 	i = 0;
 	windows->maps = ft_calloc(sizeof(char *), windows->size.x + 1);
 	while (state == 1)
@@ -572,130 +532,31 @@ void 	parsing_maps(t_windows *windows)
 		i++;
 	}
 	if (i < 2)
-		printf("error\nyour maps is not rectangle\n");
+	{
+		ft_putstr_fd("error\nYour maps is not rectangle\n", 1);
+		return (1);
+	}
 	close(fd);
-}
-
-int	create_trgb(int t, int r, int g, int b)
-{
-	return (t << 24 | r << 16 | g << 8 | b);
-}
-
-void ft_correction_pixel(t_windows *windows)
-{
-	windows->pixel_correction.img = mlx_new_image(windows->mlx, windows->size.x, windows->size.y);
-	windows->pixel_correction.addr = mlx_get_data_addr(windows->pixel_correction.img, &windows->pixel_correction.bits_per_pixel, &windows->pixel_correction.line_length, &windows->pixel_correction.endian);
-
-	for (int y = 0; y < windows->size.y; y++)
-	{
-		for (int x = 0; x < windows->size.x; x++)
-		{
-			ft_mlx_pixel_put(&windows->pixel_correction, x, y, create_trgb(255, 0, 0, 0));
-			if ((int)windows->size.x/30 % 2 == 0)
-			{
-				if (windows->size.x/30 >= 10)
-					ft_mlx_pixel_put(&windows->pixel_correction, windows->size.x/2+30, y, create_trgb(0, 128, 208, 112));
-				else
-					ft_mlx_pixel_put(&windows->pixel_correction, windows->size.x/2, y, create_trgb(0, 128, 208, 112));
-			}
-			else
-				ft_mlx_pixel_put(&windows->pixel_correction, windows->size.x/2+15, y, create_trgb(0, 128, 208, 112));
-			if ((int)windows->size.y/30 % 2 == 0)
-			{
-				if(windows->size.y/30 >= 10)
-					ft_mlx_pixel_put(&windows->pixel_correction, x, windows->size.y/2+30, create_trgb(0, 128, 208, 112));
-				else
-					ft_mlx_pixel_put(&windows->pixel_correction, x, windows->size.y/2, create_trgb(0, 128, 208, 112));	
-			}
-			else
-				ft_mlx_pixel_put(&windows->pixel_correction, x, windows->size.y/2+15, create_trgb(0, 128, 208, 112));
-		}
-	}
-}
-
-void	end_animation(t_windows *windows)
-{
-	windows->end_animation.img = mlx_new_image(windows->mlx, windows->size.x, windows->size.y);
-	windows->end_animation.addr = mlx_get_data_addr(windows->end_animation.img, &windows->end_animation.bits_per_pixel, &windows->end_animation.line_length, &windows->end_animation.endian);
-	for (int y = 0; y < windows->size.y; y++)
-		for (int x = 0; x < windows->size.x; x++)
-			ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(255, 0, 0, 0));
-	for (int y = windows->size.y/2-15; y < windows->size.y/2; y++)
-		for (int x = windows->size.x/2; x < windows->size.x/2+15; x++)
-			ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(0, 28, 166, 203));
-}
-
-void	final_screen_end(t_windows *windows)
-{
-	windows->end_animation.img = mlx_new_image(windows->mlx, windows->size.x, windows->size.y);
-	windows->end_animation.addr = mlx_get_data_addr(windows->end_animation.img, &windows->end_animation.bits_per_pixel, &windows->end_animation.line_length, &windows->end_animation.endian);
-	for (int y = 0; y < windows->size.y; y++)
-		for (int x = 0; x < windows->size.x; x++)
-			ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(0, 28, 166, 203));
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, 0, 0);
-
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.congratulation.state, (windows->size.x/2)-140, 0);
-	mlx_string_put(windows->mlx, windows->mlx_win, (windows->size.x/2)+70, 72, create_trgb(0, 255, 255, 0), ft_itoa(windows->score));
-	mlx_string_put(windows->mlx, windows->mlx_win, (windows->size.x/2)-120, 90, create_trgb(0, 255, 255, 255), "Echap or close for quit");
-	windows->key = 0;
-}
-
-void end_via_animation(t_windows *windows)
-{
-	int x = 0;
-	int neg_x = 0;
-	int y = 0;
-	int save_y = y;
-	int neg_y = 0;
-	int save_neg_y = neg_y;
-
-	while (y <= ((int)windows->size.y/2))
-	{
-		while (x <= (int)windows->size.x/2 && neg_x >= ((int)windows->size.x/2 * -1) + -30)
-		{
-			if (y == save_y)
-				y += 15;
-			else
-				y -= 15;
-			if (neg_y == save_neg_y)
-				neg_y += 15;
-			else
-				neg_y -= 15;
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, x, y);
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, neg_x, y);
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, x, neg_y);
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, neg_x, neg_y);
-			mlx_sync(3, windows->mlx_win);
-			x += 15;
-			neg_x -= 15;
-		}
-		x = 0;
-		neg_x = 0;
-		save_y += 30;
-		y = save_y;
-		save_neg_y -= 30;
-		neg_y = save_neg_y;
-	}
-	final_screen_end(windows);
-}
-
-int close_click(int keycode, t_windows *windows)
-{
-	(void) windows;
-	(void) keycode;
-	mlx_destroy_window(windows->mlx, windows->mlx_win);
-	exit(0);
 	return (0);
 }
 
-int	main(void)
+int	main(int ac, char **av)
 {
 	t_windows windows;
 
+	if (ac != 2)
+	{
+		ft_putstr_fd("error\nMaps is not found\n", 1);
+		return (0);
+	}
+	else if (ac == 2)
+	{
+		if (parsing_maps(&windows, av[1]) == 1)
+			return (0);
+	}
+
 	windows.score = 0;
 	windows.key = 1;
-
-	parsing_maps(&windows);
 
 	windows.mlx = mlx_init();
 	windows.mlx_win = mlx_new_window(windows.mlx, windows.size.x, windows.size.y, "so_long!");
