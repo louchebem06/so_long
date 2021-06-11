@@ -1,8 +1,8 @@
 so_long:	
-			cd libft && make bonus
-			cd minilibx && make
-			cp minilibx/libmlx.dylib ./
-			gcc main.c get_next_line.c libft/libft.a -L minilibx -lmlx -D BUFFER_SIZE=10 -o so_long
+		cd libft && make bonus
+		cd minilibx && make
+		cp minilibx/libmlx.dylib ./
+		gcc main.c get_next_line.c libft/libft.a -L minilibx -lmlx -D BUFFER_SIZE=10 -o so_long
 
 clean:
 		cd libft && make clean
