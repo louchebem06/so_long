@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/10 19:19:27 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/11 14:37:58 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_windows
 	t_item item;
 	t_position size;
 	char **maps;
+	int score;
 }			t_windows;
 
 void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
@@ -148,7 +149,7 @@ void refresh_maps(t_windows *windows)
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
 		if (windows->maps[(int)windows->player.position.y/30+1][(int)windows->player.position.x/30] != '1')
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
-		if (windows->player.last)
+		if (windows->player.last == 1)
 		{
 			position.x = (int)windows->player.last_position.x / 30 * 30;
 			position.y = (int)windows->player.last_position.y / 30 * 30;
@@ -167,7 +168,7 @@ void refresh_maps(t_windows *windows)
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y - 30);
 		if ((int)position.y/30 != (int)position.y/30+1 && windows->maps[(int)windows->player.position.y/30+1][(int)windows->player.position.x/30] != '1')
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y + 30);
-		if (windows->player.last)
+		if (windows->player.last == 1)
 		{
 			position.x = (int)windows->player.last_position.x / 30 * 30;
 			position.y = (int)windows->player.last_position.y / 30 * 30;
@@ -184,7 +185,7 @@ void refresh_maps(t_windows *windows)
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x, position.y);
 		if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30+1] != '1')
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x+30, position.y);
-		if (windows->player.last)
+		if (windows->player.last == 1)
 		{
 			position.x = (int)windows->player.last_position.x / 30 * 30;
 			position.y = (int)windows->player.last_position.y / 30 * 30;
@@ -203,7 +204,7 @@ void refresh_maps(t_windows *windows)
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x-30, position.y);
 		if ((int)position.x/30 != (int)position.x/30+1 && windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30+1] != '1')
 			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.ground.state, position.x+30, position.y);
-		if (windows->player.last)
+		if (windows->player.last == 1)
 		{
 			position.x = (int)windows->player.last_position.x / 30 * 30;
 			position.y = (int)windows->player.last_position.y / 30 * 30;
@@ -214,6 +215,21 @@ void refresh_maps(t_windows *windows)
 
 			windows->player.last = 0;
 		}
+	}
+
+	int i = 0;
+	while (windows->maps[i])
+	{
+		int j = 0;
+		while (windows->maps[i][j])
+		{
+			if (windows->maps[i][j] == 'C')
+				mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.superball.state, j * 30, i * 30);
+			else if (windows->maps[i][j] == 'E')
+				mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.exit.state, j * 30, i * 30);
+			j++;
+		}
+		i++;
 	}
 
 	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->pixel_correction.img, 0, 0);
@@ -468,7 +484,37 @@ int key_press(int keycode, t_windows *windows)
 		}
 		if (vitesse == setting_vitesse)
 			vitesse = 0;
-		printf("X : %f\nY : %f\n", windows->player.position.x, windows->player.position.y);
+
+		if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30] == 'C' && (windows->player.direction == LEFT || windows->player.direction == UP))
+		{
+			if ((windows->player.direction == LEFT && (int)windows->player.position.x % 30 == 0) || (windows->player.direction == UP  && (int)windows->player.position.y % 30 == 0))
+			{
+				windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30] = '0';
+				windows->score++;
+			}
+		}
+		else if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30] == 'C' && (windows->player.direction == RIGHT || windows->player.direction == DOWN))
+		{
+			windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30] = '0';
+			windows->score++;
+		}
+
+		if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30] == 'E' && (windows->player.direction == LEFT || windows->player.direction == UP))
+		{
+			if ((windows->player.direction == LEFT && (int)windows->player.position.x % 30 == 0) || (windows->player.direction == UP  && (int)windows->player.position.y % 30 == 0))
+			{
+				mlx_destroy_window(windows->mlx, windows->mlx_win);
+				printf("Score : %d\n", windows->score);
+				exit(0);
+			}
+		}
+		else if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30] == 'E' && (windows->player.direction == RIGHT || windows->player.direction == DOWN))
+		{
+			mlx_destroy_window(windows->mlx, windows->mlx_win);
+			printf("Score : %d\n", windows->score);
+			exit(0);
+		}
+
 	}
 	else if (keycode == 53)
 	{
@@ -523,6 +569,9 @@ void 	parsing_maps(t_windows *windows)
 	int turn = 0;
 	int size_first_line = 0;
 	int i = 0;
+	int pokeball = 0;
+	int exit = 0;
+	int start_position = 0;
 	while (state == 1)
 	{
 		i = 0;
@@ -551,8 +600,29 @@ void 	parsing_maps(t_windows *windows)
 			if (line[0] != '1' || line[ft_strlen(line) - 1] != '1')
 				printf("error\nWall is not found line : %d\n", turn + 1);
 		}
+		i = 0;
+		while (line[i])
+		{
+			if (line[i] == 'C')
+				pokeball++;
+			else if (line[i] == 'E')
+				exit++;
+			if (line[i] == 'P')
+				start_position++;
+			i++;
+		}
 		turn++;
 		windows->size.y = turn * 30;
+	}
+	if (pokeball < 1 || exit < 1 || start_position < 1)
+	{
+		printf("error\nyour maps don't content :\n");
+		if (pokeball < 1)
+			printf("	- collectable\n");
+		if (exit < 1)
+			printf("	- exit\n");
+		if (start_position < 1)
+			printf("	- start position\n");
 	}
 	close(fd);
 	state = 1;
@@ -658,13 +728,16 @@ int close_click(int keycode, t_windows *windows)
 {
 	(void) windows;
 	(void) keycode;
-	printf("des famille");
+	mlx_destroy_window(windows->mlx, windows->mlx_win);
+	exit(0);
 	return (0);
 }
 
 int	main(void)
 {
 	t_windows windows;
+
+	windows.score = 0;
 
 	parsing_maps(&windows);
 
@@ -685,7 +758,7 @@ int	main(void)
 
 	mlx_hook(windows.mlx_win, 2, 1L<<0, key_press, &windows);
 	mlx_hook(windows.mlx_win, 3, 1L<<1, key_release, &windows);
-	mlx_hook(windows.mlx_win, 4, 0L, close_click, &windows);
+	mlx_hook(windows.mlx_win, 17, 0, close_click, &windows);
 
 	mlx_loop(windows.mlx);
 	return (0);
