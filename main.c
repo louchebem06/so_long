@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/11 14:37:58 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/11 19:18:48 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_item
 	t_player wall;
 	t_player ground;
 	t_player exit;
+	t_player congratulation;
 }			t_item;
 
 typedef struct s_state
@@ -86,6 +87,7 @@ typedef struct s_windows
 	t_position size;
 	char **maps;
 	int score;
+	int key;
 }			t_windows;
 
 void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
@@ -257,6 +259,7 @@ void ft_define_item(t_windows *windows)
 	windows->item.wall.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/wall.xpm", &windows->item.wall.height, &windows->item.wall.width);
 	windows->item.ground.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/ground.xpm", &windows->item.ground.height, &windows->item.ground.width);
 	windows->item.exit.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/exit.xpm", &windows->item.exit.height, &windows->item.exit.width);
+	windows->item.congratulation.state = mlx_xpm_file_to_image(windows->mlx, "./asset/item/congratulation.xpm", &windows->item.congratulation.height, &windows->item.congratulation.width);
 }
 
 void player_animation(t_windows *windows, float vitesse, int state, int direction)
@@ -304,18 +307,14 @@ void player_animation(t_windows *windows, float vitesse, int state, int directio
 		move = 0;
 }
 
-//void end_via_animation(t_windows *windows);
+void end_via_animation(t_windows *windows);
 
 int key_press(int keycode, t_windows *windows)
 {
 	static int vitesse = 0;
 	vitesse++;
 	int setting_vitesse = 5;
-	/*if (keycode == 12)//q
-	{
-		end_via_animation(windows);
-	}*/
-	if (keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)//wsda
+	if ((keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0) && windows->key == 1)//wsda
 	{
 		refresh_maps(windows);
 		if (keycode == 13)//w
@@ -503,16 +502,12 @@ int key_press(int keycode, t_windows *windows)
 		{
 			if ((windows->player.direction == LEFT && (int)windows->player.position.x % 30 == 0) || (windows->player.direction == UP  && (int)windows->player.position.y % 30 == 0))
 			{
-				mlx_destroy_window(windows->mlx, windows->mlx_win);
-				printf("Score : %d\n", windows->score);
-				exit(0);
+				end_via_animation(windows);
 			}
 		}
 		else if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30] == 'E' && (windows->player.direction == RIGHT || windows->player.direction == DOWN))
 		{
-			mlx_destroy_window(windows->mlx, windows->mlx_win);
-			printf("Score : %d\n", windows->score);
-			exit(0);
+			end_via_animation(windows);
 		}
 
 	}
@@ -526,7 +521,7 @@ int key_press(int keycode, t_windows *windows)
 
 int key_release(int keycode, t_windows *windows)
 {
-	if (keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0)//wsda
+	if ((keycode == 13 || keycode == 1 || keycode == 2 || keycode == 0) && windows->key == 1)//wsda
 	{
 		refresh_maps(windows);
 		if (keycode == 13)//w
@@ -636,8 +631,9 @@ void 	parsing_maps(t_windows *windows)
 		windows->maps[i] = ft_strdup(line);
 		i++;
 	}
+	if (i < 2)
+		printf("error\nyour maps is not rectangle\n");
 	close(fd);
-	i = -1;
 }
 
 int	create_trgb(int t, int r, int g, int b)
@@ -676,53 +672,114 @@ void ft_correction_pixel(t_windows *windows)
 		}
 	}
 }
-/*
+
 void	end_animation(t_windows *windows)
 {
-	static int state = 0;
-	static int move = 0;
-	if (state == 0)
-	{
-		windows->end_animation.img = mlx_new_image(windows->mlx, windows->size.x, windows->size.y);
-		windows->end_animation.addr = mlx_get_data_addr(windows->end_animation.img, &windows->end_animation.bits_per_pixel, &windows->end_animation.line_length, &windows->end_animation.endian);
-		for (int y = 0; y < windows->size.y; y++)
-			for (int x = 0; x < windows->size.x; x++)
-				ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(255, 0, 0, 0));
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, 0, 0);
-		state++;
-	}
+	windows->end_animation.img = mlx_new_image(windows->mlx, windows->size.x, windows->size.y);
+	windows->end_animation.addr = mlx_get_data_addr(windows->end_animation.img, &windows->end_animation.bits_per_pixel, &windows->end_animation.line_length, &windows->end_animation.endian);
+	for (int y = 0; y < windows->size.y; y++)
+		for (int x = 0; x < windows->size.x; x++)
+			ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(255, 0, 0, 0));
+	for (int y = windows->size.y/2-15; y < windows->size.y/2; y++)
+		for (int x = windows->size.x/2; x < windows->size.x/2+15; x++)
+			ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(0, 28, 166, 203));
+}
 
-	if (state == 1)
+static int	nb_char(int n)
+{
+	int	i;
+
+	i = 1;
+	while (n > 9)
 	{
-		for (int y = windows->size.y/2-7; y < windows->size.y/2+8; y++)
-			for (int x = windows->size.x/2+7; x < windows->size.x/2+22; x++)
-				ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(0, 150, 150, 150));
-		state++;
+		n /= 10;
+		i++;
 	}
+	return (i);
+}
+
+char	*ft_itoa(int n)
+{
+	char	*itoa;
+	int		i;
+	int		symbole;
+
+	symbole = 0;
+	if (n == -2147483648)
+		return (ft_strdup("-2147483648"));
+	if (n < 0)
+	{
+		n = -n;
+		symbole++;
+	}
+	i = nb_char(n) + symbole;
+	itoa = ft_calloc(sizeof(char), i + 1);
+	if (itoa == 0)
+		return (0);
+	while (i > 0)
+	{
+		i--;
+		itoa[i] = n % 10 + 48;
+		n /= 10;
+	}
+	if (symbole == 1)
+		itoa[i] = '-';
+	return (itoa);
+}
+
+void	final_screen_end(t_windows *windows)
+{
+	windows->end_animation.img = mlx_new_image(windows->mlx, windows->size.x, windows->size.y);
+	windows->end_animation.addr = mlx_get_data_addr(windows->end_animation.img, &windows->end_animation.bits_per_pixel, &windows->end_animation.line_length, &windows->end_animation.endian);
+	for (int y = 0; y < windows->size.y; y++)
+		for (int x = 0; x < windows->size.x; x++)
+			ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(0, 28, 166, 203));
+	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, 0, 0);
+
+	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.congratulation.state, (windows->size.x/2)-140, 0);
+	mlx_string_put(windows->mlx, windows->mlx_win, (windows->size.x/2)+70, 72, create_trgb(0, 255, 255, 0), ft_itoa(windows->score));
+	mlx_string_put(windows->mlx, windows->mlx_win, (windows->size.x/2)-120, 90, create_trgb(0, 255, 255, 255), "Echap or close for quit");
+	windows->key = 0;
 }
 
 void end_via_animation(t_windows *windows)
 {
-	static int i = 0;
-	char str[] = "coucou";
+	int x = 0;
+	int neg_x = 0;
+	int y = 0;
+	int save_y = y;
+	int neg_y = 0;
+	int save_neg_y = neg_y;
 
-	if (i == 0)
+	while (y <= ((int)windows->size.y/2))
 	{
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, 0, 0);
-		while (i < 10000)
+		while (x <= (int)windows->size.x/2 && neg_x >= ((int)windows->size.x/2 * -1) + -30)
 		{
-			printf("%d\n", i);
-			i++;
+			if (y == save_y)
+				y += 15;
+			else
+				y -= 15;
+			if (neg_y == save_neg_y)
+				neg_y += 15;
+			else
+				neg_y -= 15;
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, x, y);
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, neg_x, y);
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, x, neg_y);
+			mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, neg_x, neg_y);
+			mlx_sync(3, windows->mlx_win);
+			x += 15;
+			neg_x -= 15;
 		}
-		end_via_animation(windows);
+		x = 0;
+		neg_x = 0;
+		save_y += 30;
+		y = save_y;
+		save_neg_y -= 30;
+		neg_y = save_neg_y;
 	}
-	else
-	{
-		ft_mlx_pixel_put(&windows->end_animation, 15, 15, create_trgb(0, 150, 150, 150));
-		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, 15, 15);
-	}
+	final_screen_end(windows);
 }
-*/
 
 int close_click(int keycode, t_windows *windows)
 {
@@ -738,6 +795,7 @@ int	main(void)
 	t_windows windows;
 
 	windows.score = 0;
+	windows.key = 1;
 
 	parsing_maps(&windows);
 
@@ -746,7 +804,7 @@ int	main(void)
 	
 	ft_correction_pixel(&windows);
 
-	//end_animation(&windows);
+	end_animation(&windows);
 	
 	ft_define_player(&windows);
 	ft_define_item(&windows);
