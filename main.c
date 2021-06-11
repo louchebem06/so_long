@@ -6,89 +6,14 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/11 19:18:48 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/11 19:33:51 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //gcc test.c -L ./minilibx -lmlx
 //https://harm-smits.github.io/42docs/libs/minilibx/getting_started.html
 
-#include "minilibx/mlx.h"
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include "get_next_line/get_next_line.h"
-#include <fcntl.h>
-
-#define UP 0
-#define DOWN 1
-#define LEFT 2
-#define RIGHT 3
-
-typedef struct s_player
-{
-	void *state;
-	int height;
-	int width;
-}			t_player;
-
-typedef struct s_position
-{
-	float x;
-	float y;
-}			t_position;
-
-typedef struct s_item
-{
-	t_player superball;
-	t_player wall;
-	t_player ground;
-	t_player exit;
-	t_player congratulation;
-}			t_item;
-
-typedef struct s_state
-{
-	t_player	up_s;
-	t_player	up_l;
-	t_player	up_r;
-	t_player	down_s;
-	t_player	down_l;
-	t_player	down_r;
-	t_player	left_s;
-	t_player	left_l;
-	t_player	left_r;
-	t_player	right_s;
-	t_player	right_l;
-	t_player	right_r;
-	t_position position;
-	t_position last_position;
-	int last;
-	int direction;
-}			t_state;
-
-typedef struct	s_data
-{
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}				t_data;
-
-typedef struct s_windows
-{
-	void	*mlx;
-	void	*mlx_win;
-	t_state player;
-	t_data pixel_correction;
-	t_data end_animation;
-	t_item item;
-	t_position size;
-	char **maps;
-	int score;
-	int key;
-}			t_windows;
+#include "so_long.h"
 
 void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -309,6 +234,21 @@ void player_animation(t_windows *windows, float vitesse, int state, int directio
 
 void end_via_animation(t_windows *windows);
 
+void end_screen(t_windows *windows)
+{
+	printf("\n\n");
+	printf(" _____                             _         _       _   _  \n");            
+	printf("/  __ \\                           | |       | |     | | (_)\n");            
+	printf("| /  \\/ ___  _ __   __ _ _ __ __ _| |_ _   _| | __ _| |_ _  ___  _ __  \n");  
+	printf("| |    / _ \\| '_ \\ / _` | '__/ _` | __| | | | |/ _` | __| |/ _ \\| '_ \\ \n");  
+	printf("| \\__/\\ (_) | | | | (_| | | | (_| | |_| |_| | | (_| | |_| | (_) | | | |\n");  
+	printf(" \\____/\\___/|_| |_|\\__, |_|  \\__,_|\\__|\\__,_|_|\\__,_|\\__|_|\\___/|_| |_|\n");  
+	printf("                    __/ |                                              \n");  
+	printf("                   |___/                                               \n");
+	end_via_animation(windows);
+	printf("\n\nYour score : %d\n", windows->score);
+}
+
 int key_press(int keycode, t_windows *windows)
 {
 	static int vitesse = 0;
@@ -502,12 +442,12 @@ int key_press(int keycode, t_windows *windows)
 		{
 			if ((windows->player.direction == LEFT && (int)windows->player.position.x % 30 == 0) || (windows->player.direction == UP  && (int)windows->player.position.y % 30 == 0))
 			{
-				end_via_animation(windows);
+				end_screen(windows);
 			}
 		}
 		else if (windows->maps[(int)windows->player.position.y/30][(int)windows->player.position.x/30] == 'E' && (windows->player.direction == RIGHT || windows->player.direction == DOWN))
 		{
-			end_via_animation(windows);
+			end_screen(windows);
 		}
 
 	}
@@ -683,48 +623,6 @@ void	end_animation(t_windows *windows)
 	for (int y = windows->size.y/2-15; y < windows->size.y/2; y++)
 		for (int x = windows->size.x/2; x < windows->size.x/2+15; x++)
 			ft_mlx_pixel_put(&windows->end_animation, x, y, create_trgb(0, 28, 166, 203));
-}
-
-static int	nb_char(int n)
-{
-	int	i;
-
-	i = 1;
-	while (n > 9)
-	{
-		n /= 10;
-		i++;
-	}
-	return (i);
-}
-
-char	*ft_itoa(int n)
-{
-	char	*itoa;
-	int		i;
-	int		symbole;
-
-	symbole = 0;
-	if (n == -2147483648)
-		return (ft_strdup("-2147483648"));
-	if (n < 0)
-	{
-		n = -n;
-		symbole++;
-	}
-	i = nb_char(n) + symbole;
-	itoa = ft_calloc(sizeof(char), i + 1);
-	if (itoa == 0)
-		return (0);
-	while (i > 0)
-	{
-		i--;
-		itoa[i] = n % 10 + 48;
-		n /= 10;
-	}
-	if (symbole == 1)
-		itoa[i] = '-';
-	return (itoa);
 }
 
 void	final_screen_end(t_windows *windows)
