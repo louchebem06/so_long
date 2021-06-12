@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 19:32:48 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/11 23:35:49 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 14:58:27 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ typedef struct s_player
 	void	*state;
 	int		height;
 	int		width;
-}			t_player;
+}				t_player;
 
 typedef struct s_position
 {
 	float	x;
 	float	y;
-}			t_position;
+}				t_position;
 
 typedef struct s_item
 {
@@ -45,7 +45,7 @@ typedef struct s_item
 	t_player	ground;
 	t_player	exit;
 	t_player	congratulation;
-}			t_item;
+}				t_item;
 
 typedef struct s_state
 {
@@ -65,7 +65,7 @@ typedef struct s_state
 	t_position	last_position;
 	int			last;
 	int			direction;
-}			t_state;
+}				t_state;
 
 typedef struct s_data
 {
@@ -86,6 +86,19 @@ typedef struct s_end_animation
 	int	save_neg_y;
 }				t_end_animation;
 
+typedef struct s_parsing
+{
+	char *line;
+	int fd;
+	int state;
+	int turn;
+	int size_first_line;
+	int i;
+	int pokeball;
+	int exit;
+	int start_position;
+}			t_parsing;
+
 typedef struct s_windows
 {
 	void		*mlx;
@@ -98,7 +111,7 @@ typedef struct s_windows
 	char		**maps;
 	int			score;
 	int			key;
-}			t_windows;
+}				t_windows;
 
 int		get_next_line(int fd, char **line);
 void	ft_mlx_pixel_put(t_data *data, int x, int y, int color);
@@ -111,5 +124,16 @@ void	end_screen(t_windows *windows);
 void	end_via_animation(t_windows *windows);
 void	final_screen_end(t_windows *windows);
 void	end_animation(t_windows *windows);
+void	maps(t_windows *windows);
+void	player_animation(t_windows *windows, float vitesse, int state,
+			int direction);
+int		key_release(int keycode, t_windows *windows);
+void	refresh_maps(t_windows *windows);
+int		key_press(int keycode, t_windows *windows);
+void	change_stats_pokeball(t_windows *windows);
+void	change_stats_exit(t_windows *windows);
+void	press_correction_x(t_windows *windows);
+void	press_correction_y(t_windows *windows);
+int 	parsing_maps(t_windows *windows, char *file);
 
 #endif

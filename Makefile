@@ -14,6 +14,13 @@ so_long:
 			end_via_animation.c \
 			final_screen_end.c \
 			end_animation.c \
+			maps.c \
+			player_animation.c \
+			key_release.c \
+			refresh_maps.c \
+			key_press.c \
+			key_press_utils.c \
+			parsing_maps.c \
 			libft/libft.a -L minilibx -lmlx -D BUFFER_SIZE=10 -o so_long
 re: 
 	rm -rf so_long
