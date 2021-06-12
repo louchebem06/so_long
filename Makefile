@@ -21,6 +21,7 @@ so_long:
 			key_press.c \
 			key_press_utils.c \
 			parsing_maps.c \
+			parsing_maps_utils.c \
 			libft/libft.a -L minilibx -lmlx -D BUFFER_SIZE=10 -o so_long
 re: 
 	rm -rf so_long

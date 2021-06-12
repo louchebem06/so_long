@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 19:32:48 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 14:58:27 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 21:25:08 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,15 @@ typedef struct s_end_animation
 
 typedef struct s_parsing
 {
-	char *line;
-	int fd;
-	int state;
-	int turn;
-	int size_first_line;
-	int i;
-	int pokeball;
-	int exit;
-	int start_position;
+	char	*line;
+	int		fd;
+	int		state;
+	int		turn;
+	int		size_first_line;
+	int		i;
+	int		pokeball;
+	int		exit;
+	int		start_position;
 }			t_parsing;
 
 typedef struct s_windows
@@ -134,6 +134,11 @@ void	change_stats_pokeball(t_windows *windows);
 void	change_stats_exit(t_windows *windows);
 void	press_correction_x(t_windows *windows);
 void	press_correction_y(t_windows *windows);
-int 	parsing_maps(t_windows *windows, char *file);
+int		parsing_maps(t_windows *windows, char *file);
+int		valid_file(t_parsing *var);
+int		valid_extension(char *file);
+int		valid_size(t_parsing *var);
+int		valid_wall(t_parsing *var);
+int		valid_object(t_parsing *var);
 
 #endif
