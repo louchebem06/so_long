@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/30 11:33:26 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/11 19:35:39 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:40:54 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	ft_eco(char **join, int *size_read, char buffer[BUFFER_SIZE], int fd)
 {

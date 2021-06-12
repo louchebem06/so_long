@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 11:36:14 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 11:45:55 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:40:17 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	move_x(t_windows *windows, float vitesse, int direction, int *move)
 {

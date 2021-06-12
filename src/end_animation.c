@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 22:45:03 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/11 23:20:29 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:41:27 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	define_alpha(t_windows *windows)
 {

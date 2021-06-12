@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 14:46:34 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 21:22:29 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/13 00:58:04 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	define_parsing_var(t_parsing *var, char *file)
 {
@@ -52,6 +52,7 @@ void	second_check(t_parsing *var, t_windows *windows, char *file)
 	{
 		var->state = get_next_line(var->fd, &var->line);
 		windows->maps[var->i] = ft_strdup(var->line);
+		free(var->line);
 		var->i++;
 	}
 }
@@ -81,6 +82,7 @@ int 	parsing_maps(t_windows *windows, char *file)
 			|| valid_wall(&var)
 			|| valid_object(&var))
 			return (1);
+		free(var.line);
 		var.turn++;
 		windows->size.y = var.turn * 30;
 	}

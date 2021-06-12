@@ -2,26 +2,26 @@ so_long:
 		cd libft && make bonus
 		cd minilibx && make
 		cp minilibx/libmlx.dylib ./
-		gcc -Wall -Wextra -Werror main.c \
-			get_next_line.c \
-			ft_mlx_pixel_put.c \
-			ft_close_click.c \
-			ft_define_player.c \
-			ft_define_item.c \
-			create_trgb.c \
-			ft_correction_pixel.c \
-			end_screen.c \
-			end_via_animation.c \
-			final_screen_end.c \
-			end_animation.c \
-			maps.c \
-			player_animation.c \
-			key_release.c \
-			refresh_maps.c \
-			key_press.c \
-			key_press_utils.c \
-			parsing_maps.c \
-			parsing_maps_utils.c \
+		gcc -Wall -Wextra -Werror src/main.c \
+			src/get_next_line.c \
+			src/ft_mlx_pixel_put.c \
+			src/ft_close_click.c \
+			src/ft_define_player.c \
+			src/ft_define_item.c \
+			src/create_trgb.c \
+			src/ft_correction_pixel.c \
+			src/end_screen.c \
+			src/end_via_animation.c \
+			src/final_screen_end.c \
+			src/end_animation.c \
+			src/maps.c \
+			src/player_animation.c \
+			src/key_release.c \
+			src/refresh_maps.c \
+			src/key_press.c \
+			src/key_press_utils.c \
+			src/parsing_maps.c \
+			src/parsing_maps_utils.c \
 			libft/libft.a -L minilibx -lmlx -D BUFFER_SIZE=10 -o so_long
 re: 
 	rm -rf so_long

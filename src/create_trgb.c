@@ -1,21 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_mlx_pixel_put.c                                 :+:      :+:    :+:   */
+/*   create_trgb.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/11 21:53:19 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/11 21:56:26 by bledda           ###   ########.fr       */
+/*   Created: 2021/06/11 22:22:15 by bledda            #+#    #+#             */
+/*   Updated: 2021/06/12 23:41:31 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
-void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
+int	create_trgb(int t, int r, int g, int b)
 {
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
+	return (t << 24 | r << 16 | g << 8 | b);
 }

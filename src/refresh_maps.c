@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 11:54:32 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 13:49:08 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:40:13 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	refresh_down(t_windows *windows, t_position *position)
 {

@@ -1,18 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_trgb.c                                      :+:      :+:    :+:   */
+/*   ft_close_click.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/11 22:22:15 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/11 22:22:26 by bledda           ###   ########.fr       */
+/*   Created: 2021/06/11 21:59:39 by bledda            #+#    #+#             */
+/*   Updated: 2021/06/13 00:56:49 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
-int	create_trgb(int t, int r, int g, int b)
+int	close_click(int keycode, t_windows *windows)
 {
-	return (t << 24 | r << 16 | g << 8 | b);
+	(void) windows;
+	(void) keycode;
+	exit(0);
+	return (0);
 }

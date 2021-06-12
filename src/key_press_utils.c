@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 14:43:29 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 14:43:34 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:40:46 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	change_stats_pokeball(t_windows *windows)
 {

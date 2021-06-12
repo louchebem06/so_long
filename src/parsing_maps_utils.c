@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 21:22:20 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 21:22:34 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:40:20 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 int	valid_file(t_parsing *var)
 {

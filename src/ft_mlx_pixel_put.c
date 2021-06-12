@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_close_click.c                                   :+:      :+:    :+:   */
+/*   ft_mlx_pixel_put.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/11 21:59:39 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/11 23:21:49 by bledda           ###   ########.fr       */
+/*   Created: 2021/06/11 21:53:19 by bledda            #+#    #+#             */
+/*   Updated: 2021/06/12 23:40:57 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
-int	close_click(int keycode, t_windows *windows)
+void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
-	(void) windows;
-	(void) keycode;
-	exit(0);
-	return (0);
+	char	*dst;
+
+	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	*(unsigned int *)dst = color;
 }

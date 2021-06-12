@@ -6,14 +6,14 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 14:51:55 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:40:32 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //gcc test.c -L ./minilibx -lmlx
 //https://harm-smits.github.io/42docs/libs/minilibx/getting_started.html
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	define_main(t_windows *windows)
 {

@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 22:23:13 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 00:20:42 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:41:09 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	correction_x(t_windows *windows, t_position	*axe)
 {

@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 13:50:05 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 14:43:10 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:40:50 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	press_up(t_windows *windows, int *vitesse, int keycode)
 {

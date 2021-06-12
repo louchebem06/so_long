@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 11:47:41 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 11:53:02 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:40:43 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	key_up(t_windows *windows)
 {

@@ -6,19 +6,19 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 19:32:48 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 21:25:08 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:38:14 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-# include "minilibx/mlx.h"
+# include "../minilibx/mlx.h"
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
-# include "libft/header/libft.h"
+# include "../libft/header/libft.h"
 
 # define UP 0
 # define DOWN 1

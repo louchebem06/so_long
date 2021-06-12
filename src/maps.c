@@ -6,11 +6,11 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 11:23:08 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 11:33:25 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/12 23:40:28 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../header/so_long.h"
 
 void	deploye_ground(t_windows *windows)
 {
