@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 22:28:16 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 23:41:23 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/13 14:32:51 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,7 @@ void	end_screen(t_windows *windows)
 	end_via_animation(windows);
 	ft_putstr_fd("\n\nYour score : ", 1);
 	ft_putnbr_fd(windows->score, 1);
+	ft_putstr_fd("\nYour move : ", 1);
+	ft_putnbr_fd(windows->move, 1);
 	ft_putstr_fd("\n", 1);
 }

@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 19:32:48 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/13 02:29:01 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/13 14:53:52 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,16 +110,18 @@ typedef struct s_parsing
 
 typedef struct s_windows
 {
-	void		*mlx;
-	void		*mlx_win;
-	t_state		player;
-	t_data		pixel_correction;
-	t_data		end_animation;
-	t_item		item;
-	t_position	size;
-	char		**maps;
-	int			score;
-	int			key;
+	void				*mlx;
+	void				*mlx_win;
+	t_state				player;
+	t_data				pixel_correction;
+	t_data				end_animation;
+	t_item				item;
+	t_position			size;
+	char				**maps;
+	int					score;
+	int					key;
+	int					speed;
+	unsigned long long	move;
 }				t_windows;
 
 int		get_next_line(int fd, char **line);
@@ -149,5 +151,6 @@ int		valid_extension(char *file);
 int		valid_size(t_parsing *var);
 int		valid_wall(t_parsing *var);
 int		valid_object(t_parsing *var);
+void	starter_animation(t_windows *windows);
 
 #endif

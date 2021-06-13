@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 11:47:41 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 23:40:43 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/13 13:47:03 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	key_release(int keycode, t_windows *windows)
 			key_left(windows);
 		if (keycode == 2)
 			key_right(windows);
+		windows->speed = 4;
 	}
 	return (0);
 }
