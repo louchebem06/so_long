@@ -6,14 +6,14 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 19:32:48 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/13 14:53:52 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/13 19:35:49 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-# include "../minilibx/mlx.h"
+# include <mlx.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -24,6 +24,7 @@
 # define DOWN 1
 # define LEFT 2
 # define RIGHT 3
+# define BUFFER_SIZE 10
 
 typedef struct s_player
 {
