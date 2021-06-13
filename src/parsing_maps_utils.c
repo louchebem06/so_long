@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 21:22:20 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 23:40:20 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/13 20:39:26 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	valid_size(t_parsing *var)
 {
 	if (var->turn == 0)
 		var->size_first_line = ft_strlen(var->line);
-	else if (var->size_first_line < (int)ft_strlen(var->line))
+	else if (var->size_first_line > (int)ft_strlen(var->line))
 	{
 		ft_putstr_fd("error\nMaps is invalid line ", 1);
 		ft_putnbr_fd(var->turn + 1, 1);

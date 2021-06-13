@@ -6,17 +6,14 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/12 13:50:05 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/13 14:48:38 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/13 20:53:23 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/so_long.h"
 
-void	press_up(t_windows *windows, int keycode)
+void	press_up(t_windows *windows)
 {
-	if (keycode != 13)
-		return ;
-	windows->move++;
 	if (windows->player.direction == UP)
 	{
 		if (windows->speed % 5 == 0)
@@ -28,7 +25,10 @@ void	press_up(t_windows *windows, int keycode)
 				[(int)windows->player.position.x / 30] == '1')
 				player_animation(windows, 0, 1, UP);
 			else
+			{
 				player_animation(windows, 7.5, 1, UP);
+				windows->move++;
+			}
 		}
 		else
 			player_animation(windows, 0, 0, UP);
@@ -44,7 +44,6 @@ void	press_down(t_windows *windows, int keycode)
 {
 	if (keycode != 1)
 		return ;
-	windows->move++;
 	if (windows->player.direction == DOWN)
 	{
 		if (windows->speed % 5 == 0)
@@ -53,7 +52,10 @@ void	press_down(t_windows *windows, int keycode)
 				[(int)windows->player.position.x / 30] == '1')
 				player_animation(windows, 0, 1, DOWN);
 			else
+			{
 				player_animation(windows, 7.5, 1, DOWN);
+				windows->move++;
+			}
 		}
 		else
 			player_animation(windows, 0, 0, DOWN);
@@ -69,7 +71,6 @@ void	press_left(t_windows *windows, int keycode)
 {
 	if (keycode != 0)
 		return ;
-	windows->move++;
 	if (windows->player.direction == LEFT)
 	{
 		if (windows->speed % 5 == 0)
@@ -80,7 +81,10 @@ void	press_left(t_windows *windows, int keycode)
 				[(int)(windows->player.position.x - 7.5) / 30] == '1')
 				player_animation(windows, 0, 1, LEFT);
 			else
+			{
 				player_animation(windows, 7.5, 1, LEFT);
+				windows->move++;
+			}
 		}
 		else
 			player_animation(windows, 0, 0, LEFT);
@@ -96,7 +100,6 @@ void	press_right(t_windows *windows, int keycode)
 {
 	if (keycode != 2)
 		return ;
-	windows->move++;
 	if (windows->player.direction == RIGHT)
 	{
 		if (windows->speed % 5 == 0)
@@ -105,7 +108,10 @@ void	press_right(t_windows *windows, int keycode)
 				[(int)windows->player.position.x / 30 + 1] == '1')
 				player_animation(windows, 0, 1, RIGHT);
 			else
+			{
 				player_animation(windows, 7.5, 1, RIGHT);
+				windows->move++;
+			}
 		}
 		else
 			player_animation(windows, 0, 0, RIGHT);
@@ -124,10 +130,12 @@ int	key_press(int keycode, t_windows *windows)
 		&& windows->key == 1)
 	{
 		refresh_maps(windows);
-		press_up(windows, keycode);
+		if (keycode == 13)
+			press_up(windows);
 		press_down(windows, keycode);
 		press_left(windows, keycode);
 		press_right(windows, keycode);
+		ft_putstr_fd("Current move : ", 1);
 		ft_putnbr_fd(windows->move, 1);
 		ft_putchar_fd('\n', 1);
 		if (windows->speed == 5)
