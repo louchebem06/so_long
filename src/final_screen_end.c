@@ -6,11 +6,46 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 22:28:34 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 23:41:16 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/13 03:44:36 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/so_long.h"
+
+void	starter_animation(t_windows *windows);
+
+int	test(int keycode, t_windows *windows)
+{
+	(void) windows;
+	if (keycode == 54)
+		close_click(0, windows);
+	starter_animation(windows);
+	return (0);
+}
+
+void	starter_animation(t_windows *windows)
+{
+	static int	i = 0;
+	long long	j;
+
+	j = 0;
+	mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->end_animation.img, 0, 95);
+	if (i == 0)
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.dancing.one.state, (windows->size.x / 2) - 70, 95);
+	else if (i == 1)
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.dancing.two.state, (windows->size.x / 2) - 70, 95);
+	else if (i == 2)
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.dancing.tree.state, (windows->size.x / 2) - 70, 95);
+	else if (i == 3)
+		mlx_put_image_to_window(windows->mlx, windows->mlx_win, windows->item.dancing.fore.state, (windows->size.x / 2) - 70, 95);
+	i++;
+	if (i == 4)
+		i = 0;
+	mlx_sync(3, windows->mlx_win);
+	while (j < 100000000)
+		j++;
+	mlx_key_hook(windows->mlx_win, test, windows);
+}
 
 void	view_screen(t_windows *windows)
 {
@@ -22,6 +57,7 @@ void	view_screen(t_windows *windows)
 		72, create_trgb(0, 255, 255, 0), ft_itoa(windows->score));
 	mlx_string_put(windows->mlx, windows->mlx_win, (windows->size.x / 2) - 120,
 		90, create_trgb(0, 255, 255, 255), "Echap or close for quit");
+	starter_animation(windows);
 }
 
 void	final_screen_end(t_windows *windows)

@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 19:32:48 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/12 23:38:14 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/13 02:29:01 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,14 @@ typedef struct s_position
 	float	y;
 }				t_position;
 
+typedef struct s_dancing
+{
+	t_player	one;
+	t_player	two;
+	t_player	tree;
+	t_player	fore;
+}				t_dancing;
+
 typedef struct s_item
 {
 	t_player	superball;
@@ -45,6 +53,7 @@ typedef struct s_item
 	t_player	ground;
 	t_player	exit;
 	t_player	congratulation;
+	t_dancing	dancing;
 }				t_item;
 
 typedef struct s_state
