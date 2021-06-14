@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 19:32:48 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/14 00:10:49 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/14 14:35:01 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,36 @@ typedef struct s_parsing
 	int		start_position;
 }			t_parsing;
 
+typedef struct s_mewtwo
+{
+	t_player	up;
+	t_player	down;
+	t_player	left;
+	t_player	right;
+	t_player	up_attack_1;
+	t_player	up_attack_2;
+	t_player	up_attack_3;
+	t_player	up_attack_4;
+	t_player	up_attack_5;
+	t_player	down_attack_1;
+	t_player	down_attack_2;
+	t_player	down_attack_3;
+	t_player	down_attack_4;
+	t_player	down_attack_5;
+	t_player	left_attack_1;
+	t_player	left_attack_2;
+	t_player	left_attack_3;
+	t_player	left_attack_4;
+	t_player	left_attack_5;
+	t_player	right_attack_1;
+	t_player	right_attack_2;
+	t_player	right_attack_3;
+	t_player	right_attack_4;
+	t_player	right_attack_5;
+	t_position	position;
+	int			isset;
+}				t_mewtwo;
+
 typedef struct s_windows
 {
 	void				*mlx;
@@ -122,6 +152,8 @@ typedef struct s_windows
 	int					key;
 	int					speed;
 	unsigned long long	move;
+	t_mewtwo			mewtwo;
+
 }				t_windows;
 
 int		get_next_line(int fd, char **line);

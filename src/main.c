@@ -6,12 +6,9 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/13 15:05:20 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/14 14:09:52 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-//gcc test.c -L ./minilibx -lmlx
-//https://harm-smits.github.io/42docs/libs/minilibx/getting_started.html
 
 #include "../header/so_long.h"
 

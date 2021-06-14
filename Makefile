@@ -6,7 +6,7 @@
 #    By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/13 19:38:21 by bledda            #+#    #+#              #
-#    Updated: 2021/06/13 23:32:46 by bledda           ###   ########.fr        #
+#    Updated: 2021/06/14 19:14:47 by bledda           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,11 @@ SRCS_COMU 			= get_next_line.c \
 
 SRCS_BONUS			= key_press_bonus.c \
 						main_bonus.c \
-						print_move_bonus.c
+						print_move_bonus.c \
+						ft_define_mewtwo_bonus.c \
+						define_place_mewtwo_bonus.c \
+						define_animation_mewtwo_bonus.c \
+						track_player_bonus.c
 
 SRC					= $(addprefix ${FOLDER},${SRCS})
 SRC_COMU			= $(addprefix ${FOLDER},${SRCS_COMU})
@@ -66,7 +70,8 @@ endif
 
 $(NAME):	${OBJ}
 			cd libft && make
-			$(CC) $(CFLAGS) ${OBJ} libft/libft.a -L/usr/local/lib -lmlx -L/usr/include -lmlx -o $(NAME)
+			#$(CC) $(CFLAGS) ${OBJ} libft/libft.a -L/usr/local/lib -lmlx -L/usr/include -lmlx -o $(NAME)
+			$(CC) $(CFLAGS) ${OBJ} libft/libft.a -l mlx -framework OpenGL -framework AppKit -o $(NAME)
 
 all:		${NAME}
 

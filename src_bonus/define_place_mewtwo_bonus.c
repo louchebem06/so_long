@@ -1,27 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   so_long_bonus.h                                    :+:      :+:    :+:   */
+/*   define_place_mewtwo_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/11 19:32:48 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/14 15:43:24 by bledda           ###   ########.fr       */
+/*   Created: 2021/06/14 14:39:53 by bledda            #+#    #+#             */
+/*   Updated: 2021/06/14 15:31:57 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SO_LONG_BONUS_H
-# define SO_LONG_BONUS_H
+#include "../header/so_long_bonus.h"
 
-# include "so_long.h"
+void	define_place_mewtwo(t_windows *windows)
+{
+	int	x;
+	int	y;
 
-# define NO 0
-# define YES 1
-
-void	print_move(t_windows *windows);
-void	ft_define_mewtwo(t_windows *windows);
-void	define_place_mewtwo(t_windows *windows);
-void	define_animation_mewtwo(t_windows *windows, int direction);
-void	track_player(t_windows *windows);
-
-#endif
+	y = 0;
+	while (windows->maps[y])
+	{
+		x = 0;
+		while (windows->maps[y][x])
+		{
+			if (windows->maps[y][x] == '0')
+			{
+				windows->mewtwo.isset = YES;
+				windows->mewtwo.position.x = x * 30;
+				windows->mewtwo.position.y = y * 30;
+				return ;
+			}
+			x++;
+		}
+		y++;
+	}
+}
