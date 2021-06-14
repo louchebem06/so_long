@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 19:32:48 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/14 14:35:01 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/14 23:05:21 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ typedef struct s_mewtwo
 	t_player	right_attack_5;
 	t_position	position;
 	int			isset;
+	int			last_state;
 }				t_mewtwo;
 
 typedef struct s_windows
@@ -153,6 +154,7 @@ typedef struct s_windows
 	int					speed;
 	unsigned long long	move;
 	t_mewtwo			mewtwo;
+	int					dead;
 
 }				t_windows;
 

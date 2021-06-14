@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/13 23:30:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/14 00:35:08 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/14 21:11:40 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,22 @@
 
 void	print_info(t_windows *windows)
 {
+	char	*score;
+	char	*move;
+
+	score = ft_itoa(windows->score);
+	move = ft_itoa(windows->move);
 	mlx_string_put(windows->mlx, windows->mlx_win, 10, 20,
 		create_trgb(0, 255, 255, 0), "Move  :");
 	mlx_string_put(windows->mlx, windows->mlx_win, 100, 20,
-		create_trgb(0, 255, 255, 0), ft_itoa(windows->move));
+		create_trgb(0, 255, 255, 0), move);
 	mlx_string_put(windows->mlx, windows->mlx_win, 10, windows->size.y - 10,
 		create_trgb(0, 255, 255, 0), "Score :");
 	mlx_string_put(windows->mlx, windows->mlx_win, 100,
 		windows->size.y - 10,
-		create_trgb(0, 255, 255, 0), ft_itoa(windows->score));
+		create_trgb(0, 255, 255, 0), score);
+	free(score);
+	free(move);
 }
 
 void	print_move(t_windows *windows)

@@ -6,7 +6,7 @@
 #    By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/13 19:38:21 by bledda            #+#    #+#              #
-#    Updated: 2021/06/14 19:14:47 by bledda           ###   ########.fr        #
+#    Updated: 2021/06/14 23:30:08 by bledda           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ FOLDER				= src/
 FOLDER_BONUS		= src_bonus/
 
 SRCS				= key_press.c \
-						main.c
+						main.c \
+						refresh_maps.c
 
 SRCS_COMU 			= get_next_line.c \
 						ft_mlx_pixel_put.c \
@@ -35,7 +36,6 @@ SRCS_COMU 			= get_next_line.c \
 						maps.c \
 						player_animation.c \
 						key_release.c \
-						refresh_maps.c \
 						key_press_utils.c \
 						parsing_maps.c \
 						parsing_maps_utils.c
@@ -46,7 +46,9 @@ SRCS_BONUS			= key_press_bonus.c \
 						ft_define_mewtwo_bonus.c \
 						define_place_mewtwo_bonus.c \
 						define_animation_mewtwo_bonus.c \
-						track_player_bonus.c
+						track_player_bonus.c \
+						define_animation_mewtwo_utils_bonus.c \
+						refresh_maps_bonus.c
 
 SRC					= $(addprefix ${FOLDER},${SRCS})
 SRC_COMU			= $(addprefix ${FOLDER},${SRCS_COMU})
@@ -70,7 +72,6 @@ endif
 
 $(NAME):	${OBJ}
 			cd libft && make
-			#$(CC) $(CFLAGS) ${OBJ} libft/libft.a -L/usr/local/lib -lmlx -L/usr/include -lmlx -o $(NAME)
 			$(CC) $(CFLAGS) ${OBJ} libft/libft.a -l mlx -framework OpenGL -framework AppKit -o $(NAME)
 
 all:		${NAME}

@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/08 03:02:37 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/14 17:12:45 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/14 22:40:20 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	define_main(t_windows *windows)
 	windows->key = YES;
 	windows->speed = NO;
 	windows->move = NO;
+	windows->dead = NO;
 	windows->mlx = mlx_init();
 	windows->mlx_win = mlx_new_window(windows->mlx, windows->size.x,
 			windows->size.y, "so_long");
@@ -28,12 +29,13 @@ void	define_main(t_windows *windows)
 	ft_define_item(windows);
 	ft_define_mewtwo(windows);
 	define_place_mewtwo(windows);
+	windows->mewtwo.last_state = 100;
 }
 
 int	end_starter_animation(t_windows *windows)
 {
 	print_move(windows);
-	if (windows->key == 0)
+	if (windows->key == 0 && windows->dead == NO)
 		starter_animation(windows);
 	if (windows->mewtwo.isset == YES && windows->key == YES)
 		track_player(windows);

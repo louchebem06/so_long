@@ -1,0 +1,4 @@
+Finir le reglage du clignotement dans
+	refresh maps bonus
+	track player bonus
+Verifier depope des mur a cause de mewtwo
