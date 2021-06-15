@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 15:42:07 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/15 00:05:14 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/15 16:50:13 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,44 +40,50 @@ int	ft_case(int xy, t_windows *windows)
 	return (state);
 }
 
-void	move_mewtwo_up(t_windows *windows)
+void	move_x_mewtwo(t_windows *windows)
 {
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-		windows->mewtwo.up.state, windows->mewtwo.position.x,
-		windows->mewtwo.position.y);
-	if (windows->mewtwo.position.y - 30 <= windows->player.position.y
-		&& windows->mewtwo.position.x == windows->player.position.x)
-		define_animation_mewtwo(windows, UP);
+	if (windows->mewtwo.position.x > windows->player.position.x
+		&& windows->maps[ft_case(0, windows)][ft_case(1, windows) - 1] != '1'
+		&& windows->maps[ft_case(0, windows)][ft_case(1, windows) - 1] != 'C'
+		&& windows->maps[ft_case(0, windows)][ft_case(1, windows) - 1] != 'E')
+	{
+		windows->mewtwo.position.x -= 30;
+		move_mewtwo_left(windows);
+		windows->mewtwo.last_state = LEFT;
+	}
+	else if (windows->mewtwo.position.x < windows->player.position.x
+		&& windows->maps[ft_case(0, windows)][ft_case(1, windows) + 1] != '1'
+		&& windows->maps[ft_case(0, windows)][ft_case(1, windows) + 1] != 'C'
+		&& windows->maps[ft_case(0, windows)][ft_case(1, windows) + 1] != 'E')
+	{
+		windows->mewtwo.position.x += 30;
+		move_mewtwo_right(windows);
+		windows->mewtwo.last_state = RIGHT;
+	}
 }
 
-void	move_mewtwo_down(t_windows *windows)
+void	move_yx_mewtwo(t_windows *windows)
 {
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-		windows->mewtwo.down.state, windows->mewtwo.position.x,
-		windows->mewtwo.position.y);
-	if (windows->mewtwo.position.y + 30 >= windows->player.position.y
-		&& windows->mewtwo.position.x == windows->player.position.x)
-		define_animation_mewtwo(windows, DOWN);
-}
-
-void	move_mewtwo_left(t_windows *windows)
-{
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-		windows->mewtwo.left.state, windows->mewtwo.position.x,
-		windows->mewtwo.position.y);
-	if (windows->mewtwo.position.x - 30 <= windows->player.position.x
-		&& windows->mewtwo.position.y == windows->player.position.y)
-		define_animation_mewtwo(windows, LEFT);
-}
-
-void	move_mewtwo_right(t_windows *windows)
-{
-	mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-		windows->mewtwo.right.state, windows->mewtwo.position.x,
-		windows->mewtwo.position.y);
-	if (windows->mewtwo.position.x + 30 >= windows->player.position.x
-		&& windows->mewtwo.position.y == windows->player.position.y)
-		define_animation_mewtwo(windows, RIGHT);
+	if (windows->mewtwo.position.y > windows->player.position.y
+		&& windows->maps[ft_case(0, windows) - 1][ft_case(1, windows)] != '1'
+		&& windows->maps[ft_case(0, windows) - 1][ft_case(1, windows)] != 'C'
+		&& windows->maps[ft_case(0, windows) - 1][ft_case(1, windows)] != 'E')
+	{
+		windows->mewtwo.position.y -= 30;
+		move_mewtwo_up(windows);
+		windows->mewtwo.last_state = UP;
+	}
+	else if (windows->mewtwo.position.y < windows->player.position.y
+		&& windows->maps[ft_case(0, windows) + 1][ft_case(1, windows)] != '1'
+		&& windows->maps[ft_case(0, windows) - 1][ft_case(1, windows)] != 'C'
+		&& windows->maps[ft_case(0, windows) - 1][ft_case(1, windows)] != 'E')
+	{
+		windows->mewtwo.position.y += 30;
+		move_mewtwo_down(windows);
+		windows->mewtwo.last_state = DOWN;
+	}
+	else
+		move_x_mewtwo(windows);
 }
 
 void	track_player(t_windows *windows)
@@ -86,80 +92,16 @@ void	track_player(t_windows *windows)
 
 	if (windows->mewtwo.last_state == 100)
 		mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-				windows->mewtwo.down.state, windows->mewtwo.position.x,
-				windows->mewtwo.position.y);
-
+			windows->mewtwo.down.state, windows->mewtwo.position.x,
+			windows->mewtwo.position.y);
 	if (speed == 30)
 	{
-		if (windows->mewtwo.position.y > windows->player.position.y
-			&&windows->maps[ft_case(0, windows) - 1][ft_case(1, windows)] != '1'
-			&& windows->maps[ft_case(0, windows) - 1][ft_case(1, windows)] != 'C'
-			&& windows->maps[ft_case(0, windows) - 1][ft_case(1, windows)] != 'E')
-		{
-			move_mewtwo_up(windows);
-			windows->mewtwo.last_state = UP;
-		}
-		else if (windows->mewtwo.position.y < windows->player.position.y
-			&& windows->maps[ft_case(0, windows) + 1][ft_case(1, windows)] != '1'
-			&& windows->maps[ft_case(0, windows) - 1][ft_case(1, windows)] != 'C'
-			&& windows->maps[ft_case(0, windows) - 1][ft_case(1, windows)] != 'E')
-		{
-			move_mewtwo_down(windows);
-			windows->mewtwo.last_state = DOWN;
-		}
-		else if (windows->mewtwo.position.x > windows->player.position.x
-			&& windows->maps[ft_case(0, windows)][ft_case(1, windows) - 1] != '1'
-			&& windows->maps[ft_case(0, windows)][ft_case(1, windows) - 1] != 'C'
-			&& windows->maps[ft_case(0, windows)][ft_case(1, windows) - 1] != 'E')
-		{
-			move_mewtwo_left(windows);
-			windows->mewtwo.last_state = LEFT;
-		}
-		else if (windows->mewtwo.position.x < windows->player.position.x
-			&& windows->maps[ft_case(0, windows)][ft_case(1, windows) + 1] != '1'
-			&& windows->maps[ft_case(0, windows)][ft_case(1, windows) + 1] != 'C'
-			&& windows->maps[ft_case(0, windows)][ft_case(1, windows) + 1] != 'E')
-		{
-			move_mewtwo_right(windows);
-			windows->mewtwo.last_state = RIGHT;
-		}
+		move_yx_mewtwo(windows);
 		speed = 0;
 	}
 	else
 	{
-		if (windows->mewtwo.last_state == UP || windows->mewtwo.last_state == DOWN
-			|| windows->mewtwo.last_state == LEFT || windows->mewtwo.last_state == RIGHT)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-				windows->item.ground.state, (ft_case(1, windows) * 30),
-				(ft_case(0, windows) * 30));
-
-		if ((windows->mewtwo.last_state == UP || windows->mewtwo.last_state == DOWN)
-			&& windows->maps[ft_case(0, windows) + 1][ft_case(1, windows)] != '1')
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-				windows->item.ground.state, (ft_case(1, windows) * 30),
-				((ft_case(0, windows) + 1) * 30));
-
-		if (windows->mewtwo.last_state == LEFT || windows->mewtwo.last_state == RIGHT)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-				windows->item.ground.state, ((ft_case(1, windows) + 1) * 30),
-				(ft_case(0, windows) * 30));
-
-		if (windows->mewtwo.last_state == UP)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-				windows->mewtwo.up.state, windows->mewtwo.position.x,
-				windows->mewtwo.position.y--);
-		else if (windows->mewtwo.last_state == DOWN)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-				windows->mewtwo.down.state, windows->mewtwo.position.x,
-				windows->mewtwo.position.y++);
-		else if (windows->mewtwo.last_state == LEFT)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-				windows->mewtwo.left.state, windows->mewtwo.position.x--,
-				windows->mewtwo.position.y);
-		else if (windows->mewtwo.last_state == RIGHT)
-			mlx_put_image_to_window(windows->mlx, windows->mlx_win,
-				windows->mewtwo.right.state, windows->mewtwo.position.x++,
-				windows->mewtwo.position.y);
+		refresh_mewtwo(windows);
 		speed++;
 	}
 }

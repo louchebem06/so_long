@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/11 22:28:34 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/13 15:03:46 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/15 17:40:38 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,13 @@ void	starter_animation(t_windows *windows)
 		j++;
 }
 
-void	view_screen(t_windows *windows)
+void	print_text(t_windows *windows)
 {
+	char	*score;
+	char	*move;
+
+	score = ft_itoa(windows->score);
+	move = ft_itoa(windows->move);
 	mlx_put_image_to_window(windows->mlx, windows->mlx_win,
 		windows->end_animation.img, 0, 0);
 	mlx_put_image_to_window(windows->mlx, windows->mlx_win,
@@ -58,11 +63,18 @@ void	view_screen(t_windows *windows)
 	mlx_string_put(windows->mlx, windows->mlx_win, (windows->size.x / 2) - 70,
 		52, create_trgb(0, 255, 255, 0), "Your score : ");
 	mlx_string_put(windows->mlx, windows->mlx_win, (windows->size.x / 2) + 55,
-		52, create_trgb(0, 255, 255, 0), ft_itoa(windows->score));
+		52, create_trgb(0, 255, 255, 0), score);
 	mlx_string_put(windows->mlx, windows->mlx_win, (windows->size.x / 2) - 70,
 		72, create_trgb(0, 255, 255, 0), "Your move  : ");
 	mlx_string_put(windows->mlx, windows->mlx_win, (windows->size.x / 2) + 55,
-		72, create_trgb(0, 255, 255, 0), ft_itoa(windows->move));
+		72, create_trgb(0, 255, 255, 0), move);
+	free(score);
+	free(move);
+}
+
+void	view_screen(t_windows *windows)
+{
+	print_text(windows);
 	if (windows->size.y >= 30 * 6)
 	{
 		mlx_string_put(windows->mlx, windows->mlx_win,

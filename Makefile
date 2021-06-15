@@ -6,7 +6,7 @@
 #    By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/13 19:38:21 by bledda            #+#    #+#              #
-#    Updated: 2021/06/14 23:30:08 by bledda           ###   ########.fr        #
+#    Updated: 2021/06/15 16:59:24 by bledda           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,7 @@ FOLDER				= src/
 FOLDER_BONUS		= src_bonus/
 
 SRCS				= key_press.c \
-						main.c \
-						refresh_maps.c
+						main.c
 
 SRCS_COMU 			= get_next_line.c \
 						ft_mlx_pixel_put.c \
@@ -38,7 +37,8 @@ SRCS_COMU 			= get_next_line.c \
 						key_release.c \
 						key_press_utils.c \
 						parsing_maps.c \
-						parsing_maps_utils.c
+						parsing_maps_utils.c \
+						refresh_maps.c
 
 SRCS_BONUS			= key_press_bonus.c \
 						main_bonus.c \
@@ -48,7 +48,8 @@ SRCS_BONUS			= key_press_bonus.c \
 						define_animation_mewtwo_bonus.c \
 						track_player_bonus.c \
 						define_animation_mewtwo_utils_bonus.c \
-						refresh_maps_bonus.c
+						refresh_mewtwo_bonus.c \
+						move_mewtwo_bonus.c
 
 SRC					= $(addprefix ${FOLDER},${SRCS})
 SRC_COMU			= $(addprefix ${FOLDER},${SRCS_COMU})
@@ -72,7 +73,10 @@ endif
 
 $(NAME):	${OBJ}
 			cd libft && make
-			$(CC) $(CFLAGS) ${OBJ} libft/libft.a -l mlx -framework OpenGL -framework AppKit -o $(NAME)
+			cd minilibx && make
+			cp minilibx/libmlx.dylib ./
+			#$(CC) $(CFLAGS) ${OBJ} libft/libft.a -l mlx -framework OpenGL -framework AppKit -o $(NAME)
+			$(CC) $(CFLAGS) ${OBJ} libft/libft.a -L./minilibx -lmlx -L./minilibx -lmlx -o $(NAME)
 
 all:		${NAME}
 
@@ -84,11 +88,14 @@ re: 		fclean all
 clean:
 			${RM} $(OBJS_COMU) $(OBJS_BONUS) $(OBJS)
 			cd libft && make clean
+			cd minilibx && make clean
 
 fclean:		
 			${RM} $(OBJS_COMU) $(OBJS_BONUS) $(OBJS)
 			cd libft && make fclean
+			cd minilibx && make clean
 			${RM} so_long
+			${RM} libmlx.dylib
 
 bonus: 		
 			$(MAKE) WITH_BONUS=1

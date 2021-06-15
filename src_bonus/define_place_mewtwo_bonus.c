@@ -6,7 +6,7 @@
 /*   By: bledda <bledda@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 14:39:53 by bledda            #+#    #+#             */
-/*   Updated: 2021/06/14 15:31:57 by bledda           ###   ########.fr       */
+/*   Updated: 2021/06/15 16:54:36 by bledda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	define_place_mewtwo(t_windows *windows)
 				windows->mewtwo.isset = YES;
 				windows->mewtwo.position.x = x * 30;
 				windows->mewtwo.position.y = y * 30;
-				return ;
 			}
 			x++;
 		}
